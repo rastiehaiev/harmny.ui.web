@@ -1,31 +1,35 @@
-# harmny/harmny.ui.web
+# harmny.ui.web
 
+This template should help get you started developing with Vue 3 in Vite.
 
+## Recommended IDE Setup
 
-## Getting Started
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-Download links:
+## Customize configuration
 
-SSH clone URL: ssh://git@git.jetbrains.space/harmony/harmny/harmny.ui.web.git
+See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-HTTPS clone URL: https://git.jetbrains.space/harmony/harmny/harmny.ui.web.git
+## Project Setup
 
-
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-
-## Prerequisites
-
-What things you need to install the software and how to install them.
-
-```
-Examples
+```sh
+npm install
 ```
 
-## Deployment
+### Compile and Hot-Reload for Development
 
-Add additional notes about how to deploy this on a production system.
+```sh
+npm run dev
+```
 
-## Resources
+### Compile and Minify for Production
 
-Add links to external resources for this project, such as CI server, bug tracker, etc.
+```sh
+npm run build
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
