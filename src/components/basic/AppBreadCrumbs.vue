@@ -99,6 +99,7 @@ export default {
     height: 3.6rem;
     width: 100%;
     border-bottom: 1px solid #EAEAEA;
+    box-sizing: border-box;
 }
 
 .app-bread-crumbs__content {

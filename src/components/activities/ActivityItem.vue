@@ -67,9 +67,6 @@ export default {
             this.$store.commit('activities/refreshCurrentExpandLevel');
         },
     },
-    beforeMount() {
-        this.$store.commit('activities/refreshCurrentExpandLevel');
-    },
 }
 </script>
 

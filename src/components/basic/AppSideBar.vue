@@ -38,6 +38,7 @@
     border-top: 1px solid #EAEAEA;
     justify-content: center;
     z-index: 100;
+    background-color: white;
 }
 
 .app-sidebar__nav {
@@ -63,6 +64,7 @@
         width: 4rem;
         height: 100%;
         border-right: 1px solid #EAEAEA;
+        border-top: none;
         box-shadow: 4px 0 5px -2px #EAEAEA;
         padding: 1.2rem 0 1.6rem 0;
     }
