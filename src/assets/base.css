@@ -23,3 +23,7 @@ html, body, #app {
 menu, ol, ul {
     list-style: none;
 }
+
+.height-a {
+    height: 2.2rem;
+}

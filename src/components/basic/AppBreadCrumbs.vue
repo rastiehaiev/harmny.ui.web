@@ -109,6 +109,8 @@ export default {
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
+    padding: 0 1.2rem;
+    box-sizing: border-box;
 }
 
 .app-bread-crumbs__item:not(:last-child) {
@@ -130,7 +132,6 @@ span.app-bread-crumbs__item {
     }
 
     .app-bread-crumbs__content {
-        padding-left: 1.2rem;
         justify-content: flex-start;
     }
 

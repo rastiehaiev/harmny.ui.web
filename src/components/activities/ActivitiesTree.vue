@@ -11,7 +11,7 @@
         <header class="activities-tree__action-items">
             <h3 class="activities-tree__header">Activities Tree</h3>
             <div class="activities-tree__action-items--container">
-                <icon-activities-action-items-new-folder/>
+                <icon-activities-action-items-new-folder @click="createActivityCandidate(true)"/>
                 <icon-activities-action-items-collapse-vertical
                         v-if="this.currentExpandLevel > 0"
                         @click="collapseOneLevelVertical"
@@ -24,8 +24,15 @@
             </div>
         </header>
         <div class="activities-tree">
-            <ul class="activity--items">
-                <activity-item v-for="activity in activities" :key="activity.id" :activity="activity" :level="0"></activity-item>
+            <ul class="activities-tree__items">
+                <activity-item
+                        v-for="activity in activities"
+                        :key="activity.id"
+                        :activity="activity"
+                        :level="0"
+                        @onActivityCreateAttempt="(group, parent) => createActivityCandidate(group, parent)"
+                        @emitActivityCreation="(group, parent) => createActivityCandidate(group, parent)"
+                />
             </ul>
         </div>
     </section>
@@ -33,6 +40,7 @@
 
 <script>
 
+import activitiesService from "@/services/activities-service.js";
 import ActivityItem from "@/components/activities/ActivityItem.vue";
 
 function expandVertical(activity) {
@@ -116,6 +124,45 @@ export default {
         }
     },
     methods: {
+        isActivityCandidate(activityId) {
+            return activitiesService.isActivityCandidate(activityId);
+        },
+        cancelActivityCreation() {
+            this.$store.commit('activities/removeActivity', activitiesService.activityCandidateId);
+        },
+        createActivityCandidate(group = true, parentActivityId = undefined) {
+            console.log(`On activity candidate create: group(${group}), parent(${parentActivityId}).`);
+            let parentActivity = undefined;
+            if (parentActivityId) {
+                parentActivity = this.activitiesMap.get(parentActivityId);
+                if (!parentActivity) {
+                    console.log(`No parent activity found by id='${parentActivityId}'.`);
+                    return;
+                }
+                if (!parentActivity.group) {
+                    console.log(`Parent activity '${parentActivityId}' is not a group.`);
+                    return;
+                }
+            }
+            const existingActivity = this.activitiesMap.get(activitiesService.activityCandidateId);
+            const inTheSameGroup = existingActivity && existingActivity.parent_activity_id === parentActivityId;
+            const inAnotherGroup = existingActivity && existingActivity.parent_activity_id !== parentActivityId;
+            if (inTheSameGroup || inAnotherGroup) {
+                this.$store.commit('activities/removeActivity', existingActivity.id);
+            }
+            if (!existingActivity || inAnotherGroup) {
+                const newPotentialActivity = {
+                    id: activitiesService.activityCandidateId,
+                    parent_activity_id: parentActivityId,
+                    name: "",
+                    group,
+                };
+                if (parentActivity) {
+                    parentActivity.opened = true;
+                }
+                this.$store.commit('activities/addActivity', newPotentialActivity);
+            }
+        },
         expandAllVertical() {
             if (this.activities && this.activities.length && this.activities.length > 0) {
                 for (const activity of this.activities) {
@@ -155,6 +202,9 @@ export default {
         activities() {
             return this.$store.getters['activities/activities'];
         },
+        activitiesMap() {
+            return this.$store.getters['activities/activitiesMap'];
+        },
         currentExpandLevel() {
             return this.$store.getters['activities/currentExpandLevel'];
         },
@@ -162,7 +212,7 @@ export default {
     watch: {
         isMobileView() {
             this.setDisplayProperties();
-        }
+        },
     },
     beforeMount() {
         this.$store.commit('activities/refreshCurrentExpandLevel');
@@ -285,10 +335,6 @@ export default {
 /* Works on Chrome, Edge, and Safari */
 .activities-tree::-webkit-scrollbar {
     width: 0.1rem;
-    display: none;
-}
-
-.activities-tree:hover::-webkit-scrollbar {
     display: block;
 }
 
@@ -304,4 +350,5 @@ export default {
         height: calc(100% - 3.6rem - 1.6rem);
     }
 }
+
 </style>

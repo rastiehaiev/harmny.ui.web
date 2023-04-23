@@ -29,6 +29,9 @@ import IconActivitiesActionItemsCollapseVertical
 import IconActivitiesActionItemsExpandVertical
     from "@/components/basic/icons/IconActivitiesActionItemsExpandVertical.vue";
 
+import IconOk from "@/components/basic/icons/confirmation/IconOk.vue";
+import IconCancel from "@/components/basic/icons/confirmation/IconCancel.vue";
+
 const app = createApp(App)
 app.use(router);
 app.use(store);
@@ -37,6 +40,9 @@ app.component('view-activity', ViewActivities);
 
 app.component('app-side-bar', AppSideBar);
 app.component('app-bread-crumbs', AppBreadCrumbs);
+
+app.component('icon-ok', IconOk);
+app.component('icon-cancel', IconCancel);
 
 app.component('icon-activities-activity', IconActivitiesActivity);
 app.component('icon-activities-activity-group-empty', IconActivitiesActivityGroupEmpty);

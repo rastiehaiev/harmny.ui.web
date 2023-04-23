@@ -2,6 +2,8 @@ import mutations from '@/store/activities/mutations.js';
 import getters from '@/store/activities/getters.js';
 import actions from '@/store/activities/actions.js';
 
+import activitiesService from "@/services/activities-service.js";
+
 const activitiesArray = [
     {
         id: "b3bc2313-d8a3-451f-9947-2bcd120ea585",
@@ -93,6 +95,14 @@ const activitiesArray = [
                         last_updated_at: "2023-02-24T10:05:17.931163Z"
                     }
                 ]
+            },
+            {
+                id: "6dabc5b6-69e7-4446-d6b0-d170eea343cc",
+                name: "Shoulders",
+                group: true,
+                parent_activity_id: "b3bc2313-d8a3-451f-9947-2bcd120ea585",
+                created_at: "2023-02-24T10:04:24.155277Z",
+                last_updated_at: "2023-02-24T10:04:24.155277Z"
             },
             {
                 id: "034e8acf-bf88-47c8-b178-76b8adabe6ac",
@@ -249,26 +259,12 @@ const activitiesArray = [
     }
 ];
 
-const activitiesMap = new Map()
-
-function populateActivitiesMap(activities) {
-    for (const activity of activities) {
-        activitiesMap.set(activity.id, activity);
-        let childActivities = activity.child_activities;
-        if (childActivities && childActivities.length && childActivities.length > 0) {
-            populateActivitiesMap(childActivities)
-        }
-    }
-}
-
-populateActivitiesMap(activitiesArray);
-
 export default {
     namespaced: true,
     state() {
         return {
             activities: activitiesArray,
-            activitiesMap,
+            activitiesMap: activitiesService.toMap(activitiesArray),
             currentExpandLevel: 0,
         }
     },
