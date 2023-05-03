@@ -99,7 +99,6 @@ export default {
     height: 3.6rem;
     width: 100%;
     border-bottom: 1px solid #EAEAEA;
-    box-sizing: border-box;
 }
 
 .app-bread-crumbs__content {
@@ -110,7 +109,6 @@ export default {
     justify-content: center;
     gap: 0.4rem;
     padding: 0 1.2rem;
-    box-sizing: border-box;
 }
 
 .app-bread-crumbs__item:not(:last-child) {

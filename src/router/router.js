@@ -1,5 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import ViewActivities from "@/components/views/ViewActivities.vue";
+import ViewRoutines from "@/components/views/ViewRoutines.vue";
+import ViewGoals from "@/components/views/ViewGoals.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -18,11 +20,11 @@ const router = createRouter({
         },
         {
             path: "/routines",
-            redirect: "/activities"
+            component: ViewRoutines,
         },
         {
             path: "/goals",
-            redirect: "/activities"
+            component: ViewGoals,
         },
     ]
 });

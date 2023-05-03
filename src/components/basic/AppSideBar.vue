@@ -2,24 +2,25 @@
     <aside id="app-sidebar">
         <nav class="app-sidebar__nav">
             <ul class="app-sidebar__items">
-                <li class="app-sidebar__item--logo">
+                <li :class="{'app-sidebar__item': mobile, 'app-sidebar__item--logo': !mobile, 'app-sidebar__item--active': this.currentPath === '' }">
                     <router-link to="/" title="Home">
-                        <icon-logo/>
+                        <w-icon v-if="mobile">mdi mdi-home-outline</w-icon>
+                        <icon-logo v-else/>
                     </router-link>
                 </li>
-                <li class="app-sidebar__item app-sidebar__item--active">
+                <li class="app-sidebar__item" :class="{'app-sidebar__item--active': this.currentPath === 'activities'}">
                     <router-link to="/activities" title="Activities">
-                        <icon-side-bar-activity/>
+                        <w-icon>mdi mdi-run</w-icon>
                     </router-link>
                 </li>
-                <li class="app-sidebar__item">
+                <li class="app-sidebar__item" :class="{'app-sidebar__item--active': this.currentPath === 'routines'}">
                     <router-link to="/routines" title="Routines">
-                        <icon-side-bar-routines/>
+                        <w-icon>mdi mdi-list-box-outline</w-icon>
                     </router-link>
                 </li>
-                <li class="app-sidebar__item">
+                <li class="app-sidebar__item" :class="{'app-sidebar__item--active': this.currentPath === 'goals'}">
                     <router-link to="/goals" title="Goals">
-                        <icon-side-bar-goals/>
+                        <w-icon>mdi mdi-bullseye</w-icon>
                     </router-link>
                 </li>
             </ul>
@@ -34,7 +35,6 @@
     bottom: 0;
     width: 100%;
     height: 4rem;
-    box-sizing: border-box;
     border-top: 1px solid #EAEAEA;
     justify-content: center;
     z-index: 100;
@@ -55,8 +55,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
-    box-sizing: border-box;
+    gap: 2.4rem;
 }
 
 @media only screen and (min-width: 50rem) {
@@ -91,30 +90,49 @@
     width: 2.5rem;
 }
 
-.app-sidebar__item svg {
-    height: 1.8rem;
-    width: 1.8rem;
+.app-sidebar__item i {
+    font-size: 1.8rem;
 }
 
-.app-sidebar__item svg {
-    fill: #909090;
+.app-sidebar__item i {
+    color: #909090;
 }
 
-.app-sidebar__item svg:hover,
-.app-sidebar__item svg:active {
-    fill: #606060;
+.app-sidebar__item i:hover,
+.app-sidebar__item i:active {
+    color: #606060;
 }
 
-.app-sidebar__item--active svg,
-.app-sidebar__item--active:hover svg,
-.app-sidebar__item--active:active svg {
-    fill: #B243C5;
+.app-sidebar__item--active i,
+.app-sidebar__item--active:hover i,
+.app-sidebar__item--active:active i {
+    color: #B243C5;
 }
 
 .app-sidebar__link-profile {
-    width: 2.4rem;
-    height: 2.4rem;
-    border-radius: 2.4rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 1.8rem;
     border: 1px solid #909090;
 }
+
+@media only screen and (min-width: 50rem) {
+    .app-sidebar__link-profile {
+        width: 2.4rem;
+        height: 2.4rem;
+        border-radius: 2.4rem;
+    }
+}
 </style>
+<script>
+export default {
+    computed: {
+        mobile() {
+            return this.$store.getters['isMobileView'];
+        },
+        currentPath() {
+            return this.$route.path.split('/')[1];
+        }
+    },
+}
+</script>

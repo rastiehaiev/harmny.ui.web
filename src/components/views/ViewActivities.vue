@@ -1,12 +1,13 @@
 <template>
     <div class="app-content__main">
         <activities-tree></activities-tree>
-        <section class="activity-section"></section>
+        <section class="activity-section">
+
+        </section>
     </div>
 </template>
 
 <script>
-
 import ActivitiesTree from "@/components/activities/ActivitiesTree.vue";
 
 export default {
@@ -20,14 +21,12 @@ export default {
 </script>
 
 <style>
-.app-content__main {
+.activity-section {
+    flex-grow: 10;
     display: flex;
-    flex-direction: row;
-    height: 100%;
 }
 
-.activity-section {
-    display: flex;
-    flex-grow: 1;
+.activity-section i {
+    font-size: 2.4rem;
 }
 </style>

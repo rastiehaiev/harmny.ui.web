@@ -24,6 +24,26 @@ menu, ol, ul {
     list-style: none;
 }
 
+#app {
+    box-sizing: border-box;
+}
+
 .height-a {
     height: 2.2rem;
+}
+
+.icon-size-a {
+    font-size: 1rem;
+}
+
+.icon-size-b {
+    font-size: 1.2rem;
+}
+
+.color-ok {
+    color: rgba(30,115,7,0.66);
+}
+
+.color-cancel {
+    color: rgba(255,0,0,0.66);
 }
