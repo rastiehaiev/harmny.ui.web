@@ -1,6 +1,18 @@
-import activitiesService from "@/services/activities-service";
+import activitiesUtils from "@/utils/activities-utils";
 
 export default {
+    applyFreshActivities(context, payload) {
+        if (payload) {
+            const {activities} = payload;
+            const currentActivities = context.getters.activities;
+            if (currentActivities) {
+                // refresh activities
+                const currentActivitiesMap = context.getters.activitiesMap;
+                activitiesUtils.applyFromExisting(activities, currentActivitiesMap);
+            }
+            context.commit('applyFreshActivities', activities);
+        }
+    },
     createActivityCandidate(context, payload) {
         const {group, parentActivityId} = payload;
         const state = context.state;
@@ -16,7 +28,7 @@ export default {
                 return;
             }
         }
-        const existingActivity = state.activitiesMap.get(activitiesService.activityCandidateId);
+        const existingActivity = state.activitiesMap.get(activitiesUtils.activityCandidateId);
         const inTheSameGroup = existingActivity && existingActivity.parent_activity_id === parentActivityId;
         const inAnotherGroup = existingActivity && existingActivity.parent_activity_id !== parentActivityId;
         if (inTheSameGroup || inAnotherGroup) {
@@ -24,7 +36,7 @@ export default {
         }
         if (!existingActivity || inAnotherGroup) {
             const newPotentialActivity = {
-                id: activitiesService.activityCandidateId,
+                id: activitiesUtils.activityCandidateId,
                 parent_activity_id: parentActivityId,
                 name: "",
                 group,

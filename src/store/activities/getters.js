@@ -7,5 +7,5 @@ export default {
     },
     currentExpandLevel(state) {
         return state.currentExpandLevel;
-    }
+    },
 };

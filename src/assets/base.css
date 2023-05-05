@@ -28,6 +28,12 @@ menu, ol, ul {
     box-sizing: border-box;
 }
 
+.app-content__main {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
 .height-a {
     height: 2.2rem;
 }

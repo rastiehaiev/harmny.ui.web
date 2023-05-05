@@ -60,12 +60,6 @@ html {
     padding-bottom: 4rem;
 }
 
-.app-content__main {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-}
-
 @media only screen and (min-width: 50rem) {
     .app-content {
         height: 100%;

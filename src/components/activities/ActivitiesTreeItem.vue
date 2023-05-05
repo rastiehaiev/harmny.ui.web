@@ -101,7 +101,7 @@
 import { useClipboard } from '@vueuse/core';
 const { copy } = useClipboard();
 
-import activitiesService from "@/services/activities-service.js";
+import activitiesUtils from "@/utils/activities-utils.js";
 import HyListItem from "@/components/basic/elements/HyListItem.vue";
 import HyMenu from "@/components/basic/elements/HyMenu.vue";
 import ActivityMenuItem from "@/components/activities/ActivityMenuItem.vue";
@@ -122,7 +122,7 @@ export default {
             copy(activityId);
         },
         isActivityCandidate(activityId) {
-            return !activityId || activityId === activitiesService.activityCandidateId;
+            return !activityId || activityId === activitiesUtils.activityCandidateId;
         },
         onActivityCandidateLoseFocus() {
             const activityCandidateInput = this.$refs.activityCandidateInput;
@@ -136,7 +136,7 @@ export default {
             this.$store.dispatch('activities/createActivityCandidate', {group, parentActivityId});
         },
         cancelActivityCreation() {
-            this.$store.commit('activities/removeActivity', activitiesService.activityCandidateId);
+            this.$store.commit('activities/removeActivity', activitiesUtils.activityCandidateId);
         },
         commitActivityCreation() {
             this.$store.commit('activities/commitActivityCreation');

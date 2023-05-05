@@ -43,6 +43,7 @@
 <script>
 
 import activitiesService from "@/services/activities-service.js";
+import activitiesUtils from "@/utils/activities-utils.js";
 import ActivitiesTreeItem from "@/components/activities/ActivitiesTreeItem.vue";
 
 function expandVertical(activity) {
@@ -117,10 +118,10 @@ export default {
     },
     methods: {
         isActivityCandidate(activityId) {
-            return activitiesService.isActivityCandidate(activityId);
+            return activitiesUtils.isActivityCandidate(activityId);
         },
         cancelActivityCreation() {
-            this.$store.commit('activities/removeActivity', activitiesService.activityCandidateId);
+            this.$store.commit('activities/removeActivity', activitiesUtils.activityCandidateId);
         },
         createGroupActivityCandidateInRoot() {
             this.$store.dispatch('activities/createActivityCandidate', {group: true});
@@ -175,6 +176,13 @@ export default {
     beforeMount() {
         this.$store.commit('activities/refreshCurrentExpandLevel');
         this.setDisplayProperties();
+    },
+    mounted() {
+        activitiesService.listAll()
+            .then(response => {
+                const activities = response.data;
+                this.$store.dispatch('activities/applyFreshActivities', {activities});
+            });
     },
 }
 </script>

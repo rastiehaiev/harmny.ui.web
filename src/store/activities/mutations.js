@@ -1,4 +1,4 @@
-import activitiesService from "@/services/activities-service.js";
+import activitiesUtils from "@/utils/activities-utils.js";
 
 function uuid() {
     return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -7,21 +7,10 @@ function uuid() {
 }
 
 export default {
-    refreshCurrentExpandLevel(state) {
-        let currentExpandLevel = 0;
-        if (state.activities && state.activities.length && state.activities.length > 0) {
-            for (const activity of state.activities) {
-                const thisActivityExpandLevel = activitiesService.getExpandLevel(activity);
-                if (thisActivityExpandLevel > currentExpandLevel) {
-                    currentExpandLevel = thisActivityExpandLevel;
-                    if (currentExpandLevel >= 3) {
-                        // no reason to look for more, because 3 is a max of [0, 3]
-                        break;
-                    }
-                }
-            }
-        }
-        state.currentExpandLevel = currentExpandLevel;
+    applyFreshActivities(state, activities) {
+        const newActivities = activities ? activities : [];
+        state.activities = newActivities;
+        state.activitiesMap = activitiesUtils.toMap(newActivities);
     },
     addActivity(state, activity) {
         let targetActivities = undefined;
@@ -41,23 +30,23 @@ export default {
         if (targetActivities) {
             targetActivities.push(activity);
             state.activitiesMap.set(activity.id, activity);
-            activitiesService.sort(targetActivities);
+            activitiesUtils.sort(targetActivities);
         }
     },
     removeActivity(state, activityId) {
-        activitiesService.deleteById(activityId, state.activities);
+        activitiesUtils.deleteById(activityId, state.activities);
         state.activitiesMap.delete(activityId);
     },
     commitActivityCreation(state) {
-        const activityCandidate = state.activitiesMap.get(activitiesService.activityCandidateId);
+        const activityCandidate = state.activitiesMap.get(activitiesUtils.activityCandidateId);
         if (activityCandidate) {
             activityCandidate.id = uuid();
-            state.activitiesMap.delete(activitiesService.activityCandidateId);
+            state.activitiesMap.delete(activitiesUtils.activityCandidateId);
             state.activitiesMap.set(activityCandidate.id, activityCandidate);
         }
     },
     refreshActivityCandidatePosition(state, newValue) {
-        const activityCandidate = state.activitiesMap.get(activitiesService.activityCandidateId);
+        const activityCandidate = state.activitiesMap.get(activitiesUtils.activityCandidateId);
         if (activityCandidate) {
             activityCandidate.name = newValue;
             let activities = undefined;
@@ -66,7 +55,23 @@ export default {
             } else {
                 activities = state.activitiesMap.get(activityCandidate.parent_activity_id).child_activities;
             }
-            activitiesService.sort(activities);
+            activitiesUtils.sort(activities);
         }
+    },
+    refreshCurrentExpandLevel(state) {
+        let currentExpandLevel = 0;
+        if (state.activities && state.activities.length && state.activities.length > 0) {
+            for (const activity of state.activities) {
+                const thisActivityExpandLevel = activitiesUtils.getExpandLevel(activity);
+                if (thisActivityExpandLevel > currentExpandLevel) {
+                    currentExpandLevel = thisActivityExpandLevel;
+                    if (currentExpandLevel >= 3) {
+                        // no reason to look for more, because 3 is a max of [0, 3]
+                        break;
+                    }
+                }
+            }
+        }
+        state.currentExpandLevel = currentExpandLevel;
     },
 };
