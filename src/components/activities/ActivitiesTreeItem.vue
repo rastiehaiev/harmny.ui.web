@@ -13,21 +13,26 @@
             </w-icon>
         </template>
         <template #base-content>
-            <input v-if="isActivityCandidate(activity.id)"
+            <input v-if="activity.id === activityInEditModeId"
                    type="text"
-                   v-model="activityCandidateName"
+                   :disabled="activity.operationInProgress"
+                   v-model="activityInEditModeName"
                    @blur="onActivityCandidateLoseFocus"
-                   @keyup.enter="commitActivityCreation"
-                   ref="activityCandidateInput"
+                   @keyup.enter="commitActivityEditMode(activity.id)"
+                   ref="activityInEditModeInputRef"
+                   @click.prevent
             />
             <h4 v-else :title="activity.name">{{ activity.name }}</h4>
         </template>
         <template #action-items>
-            <div v-if="isActivityCandidate(activity.id)" class="activity-tree-item__action-items-area">
-                <w-icon class="color-cancel activities-tree__new-activity--action-item" @click="cancelActivityCreation">
+            <div v-if="activity.operationInProgress" class="activity-tree-item__action-items-area">
+                <w-progress circle color="yellow" bg-color="cyan"></w-progress>
+            </div>
+            <div v-else-if="activity.id === activityInEditModeId" class="activity-tree-item__action-items-area">
+                <w-icon class="color-cancel activities-tree__new-activity--action-item" @click="cancelActivityEditMode">
                     mdi mdi-close-circle-outline
                 </w-icon>
-                <w-icon class="color-ok activities-tree__new-activity--action-item" @click="commitActivityCreation">
+                <w-icon class="color-ok activities-tree__new-activity--action-item" @click="commitActivityEditMode">
                     mdi mdi-check-circle-outline
                 </w-icon>
             </div>
@@ -39,7 +44,7 @@
                 </template>
                 <template #menu-area>
                     <ul>
-                        <activity-menu-item v-if="activity.group && level < 2" @click.prevent="createActivityCandidate(true, activity.id)">
+                        <activity-menu-item v-if="activity.group && level < 2" @click.prevent="startActivityCreation(true, activity.id)">
                             <template #left-icon>
                                 <w-icon>mdi mdi-folder-plus-outline</w-icon>
                             </template>
@@ -47,7 +52,7 @@
                                 <h3>Create activity group</h3>
                             </template>
                         </activity-menu-item>
-                        <activity-menu-item v-if="activity.group && level < 3" @click.prevent="createActivityCandidate(false, activity.id)">
+                        <activity-menu-item v-if="activity.group && level < 3" @click.prevent="startActivityCreation(false, activity.id)">
                             <template #left-icon>
                                 <w-icon>mdi mdi-rocket-launch</w-icon>
                             </template>
@@ -63,7 +68,7 @@
                                 <h3>Copy link</h3>
                             </template>
                         </activity-menu-item>
-                        <activity-menu-item @click.prevent="createActivityCandidate(false, activity.id)">
+                        <activity-menu-item @click.prevent="startActivityRenaming(activity)">
                             <template #left-icon>
                                 <w-icon>mdi mdi-rename</w-icon>
                             </template>
@@ -71,7 +76,7 @@
                                 <h3>Rename</h3>
                             </template>
                         </activity-menu-item>
-                        <activity-menu-item @click.prevent="createActivityCandidate(false, activity.id)">
+                        <activity-menu-item @click.prevent="deleteActivity(activity)">
                             <template #left-icon>
                                 <w-icon>mdi mdi-delete</w-icon>
                             </template>
@@ -98,54 +103,76 @@
 
 <script>
 
-import { useClipboard } from '@vueuse/core';
-const { copy } = useClipboard();
+import {useClipboard} from '@vueuse/core';
 
+const {copy} = useClipboard();
+
+import configProvider from "@/utils/config-provider.js";
 import activitiesUtils from "@/utils/activities-utils.js";
 import HyListItem from "@/components/basic/elements/HyListItem.vue";
 import HyMenu from "@/components/basic/elements/HyMenu.vue";
 import ActivityMenuItem from "@/components/activities/ActivityMenuItem.vue";
+import {nextTick} from "vue";
 
 export default {
     name: 'activities-tree-item',
     components: {HyMenu, HyListItem, ActivityMenuItem},
     data() {
         return {
-            activityCandidateName: undefined,
+            activityInEditModeName: undefined,
             expandLevelChanges: 0,
             currentExpandLevel: 0,
         }
     },
     props: ['activity', 'level'],
     methods: {
-        copyToClipboard(activityId) {
-            copy(activityId);
+        startActivityCreation(group, parentActivityId) {
+            this.$store.dispatch('activities/startActivityCreation', {group, parentActivityId});
         },
-        isActivityCandidate(activityId) {
-            return !activityId || activityId === activitiesUtils.activityCandidateId;
+        startActivityRenaming(activity) {
+            this.$store.dispatch('activities/startActivityRenaming', {activityId: activity.id});
+            this.activityInEditModeName = activity.name;
+            this.onActivityCandidateLoseFocus()
+        },
+        cancelActivityEditMode() {
+            this.$store.dispatch('activities/cancelActivityEditMode');
+        },
+        commitActivityEditMode(activityId) {
+            let errorResponseMaybe = undefined;
+            if (activitiesUtils.isActivityCandidate(activityId)) {
+                errorResponseMaybe = this.$store.dispatch('activities/commitActivityCreation');
+            } else {
+                errorResponseMaybe = this.$store.dispatch('activities/commitActivityRenaming');
+            }
+            if (errorResponseMaybe) {
+                errorResponseMaybe.then((result) => {
+                    if (result) {
+                        const {error, activityId} = result;
+                        if (error) {
+                            console.log(error);
+                        } else if (activityId) {
+                            this.$router.push({name: 'activity', params: {activityId}});
+                        }
+                    }
+                });
+            }
+        },
+        copyToClipboard(activityId) {
+            copy(`${configProvider.uiActivitiesUrl}/${activityId}`);
+        },
+        deleteActivity(activity) {
+            activity.operationInProgress = !activity.operationInProgress;
         },
         onActivityCandidateLoseFocus() {
-            const activityCandidateInput = this.$refs.activityCandidateInput;
-            if (activityCandidateInput) {
-                setTimeout(function () {
-                    activityCandidateInput.focus();
-                }, 20);
-            }
-        },
-        createActivityCandidate(group, parentActivityId) {
-            this.$store.dispatch('activities/createActivityCandidate', {group, parentActivityId});
-        },
-        cancelActivityCreation() {
-            this.$store.commit('activities/removeActivity', activitiesUtils.activityCandidateId);
-        },
-        commitActivityCreation() {
-            this.$store.commit('activities/commitActivityCreation');
+            nextTick().then(() => {
+                const activityInEditModeInputRef = this.$refs.activityInEditModeInputRef;
+                if (activityInEditModeInputRef) {
+                    activityInEditModeInputRef.focus();
+                }
+            });
         },
         routeTo(activityId) {
-            if (this.isActivityCandidate(activityId)) {
-                return undefined;
-            }
-            return `/activities/${activityId}`;
+            return !activitiesUtils.isActivityCandidate(activityId) ? `/activities/${activityId}` : undefined;
         },
         collapseGroup(activityId) {
             const activity = this.activitiesMap.get(activityId);
@@ -169,13 +196,19 @@ export default {
         activities() {
             return this.$store.getters['activities/activities'];
         },
+        activityInEditMode() {
+            return this.$store.getters['activities/activityInEditMode'];
+        },
+        activityInEditModeId() {
+            return this.$store.getters['activities/activityInEditModeId'];
+        },
     },
     watch: {
         expandLevelChanges() {
             this.$store.commit('activities/refreshCurrentExpandLevel');
         },
-        activityCandidateName(newValue) {
-            this.$store.commit('activities/refreshActivityCandidatePosition', newValue);
+        activityInEditModeName(newValue) {
+            this.$store.commit('activities/refreshEditedActivityPosition', newValue);
         },
     },
     mounted() {
@@ -199,6 +232,10 @@ export default {
     gap: 0.2rem;
 }
 
+.activity-tree-item__action-items-area div.w-progress {
+    width: 1.2rem;
+}
+
 .activity-tree-item__action-items-area--options {
     opacity: 0;
     color: #444343;
@@ -213,15 +250,15 @@ export default {
     opacity: 1;
 }
 
-.router-link-active.list-item__container .list-item__left-icon-area i.activity_item__icon-activity {
+.router-link-active.list-item__container .list-item__left-icon-area .activity_item__icon-activity {
     color: #B243C5;
 }
 
-.router-link-active.list-item__container .list-item__left-icon-area i.activity_item__icon-activity-group {
+.router-link-active.list-item__container .list-item__left-icon-area .activity_item__icon-activity-group {
     color: #1a6207;
 }
 
-i.activities-tree__new-activity--action-item {
+.activities-tree__new-activity--action-item {
     font-size: 1.4rem;
     cursor: pointer;
 }

@@ -74,7 +74,6 @@ export default {
             if (this.stickTo.startsWith("right")) {
                 left = rect.x + rect.width;
                 if (this.stickTo === 'right-top') {
-                    console.log(rect.bottom / viewportHeight);
                     if (rect.bottom / viewportHeight > 0.8) {
                         // will stick to bottom instead of top
                         bottom = viewportHeight - rect.bottom;

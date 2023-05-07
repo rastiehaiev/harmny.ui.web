@@ -35,7 +35,6 @@ export default {
         for (let i = 0; i < activities.length; i++) {
             const activity = activities[i];
             if (activity.id === activityId) {
-                console.log('Deleting activity ' + activityId);
                 activities.splice(i, 1);
                 return true;
             } else {
@@ -64,6 +63,17 @@ export default {
             }
         }
         return maxChildActivityExpandLevel + 1;
+    },
+    openAllInActivityHierarchy(activitiesMap, activityId) {
+        if (activitiesMap && activityId) {
+            const activity = activitiesMap.get(activityId);
+            if (activity) {
+                activity.opened = true;
+                if (activity.parent_activity_id) {
+                    this.openAllInActivityHierarchy(activitiesMap, activity.parent_activity_id);
+                }
+            }
+        }
     },
     isActivityCandidate(activityId) {
         return !activityId || activityId === this.activityCandidateId;

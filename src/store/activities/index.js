@@ -8,6 +8,7 @@ export default {
         return {
             activities: undefined,
             activitiesMap: undefined,
+            activityInEditMode: undefined,
             currentExpandLevel: 0,
         }
     },

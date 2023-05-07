@@ -11,18 +11,22 @@ const router = createRouter({
             redirect: "/activities"
         },
         {
+            name: 'activities',
             path: "/activities",
             component: ViewActivities,
         },
         {
+            name: 'activity',
             path: "/activities/:activityId",
             component: ViewActivities,
         },
         {
+            name: 'routines',
             path: "/routines",
             component: ViewRoutines,
         },
         {
+            name: 'goals',
             path: "/goals",
             component: ViewGoals,
         },

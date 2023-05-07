@@ -6,18 +6,40 @@ function uuid() {
     );
 }
 
+function sortContainingGroup(activity, activities, activitiesMap) {
+    if (activity && activitiesMap) {
+        let targetActivities = undefined;
+        if (!activity.parent_activity_id) {
+            targetActivities = activities;
+        } else {
+            const parentActivity = activitiesMap.get(activity.parent_activity_id);
+            if (parentActivity) {
+                targetActivities = parentActivity.child_activities;
+            }
+        }
+        if (targetActivities) {
+            activitiesUtils.sort(targetActivities);
+        }
+    }
+}
+
 export default {
     applyFreshActivities(state, activities) {
         const newActivities = activities ? activities : [];
         state.activities = newActivities;
         state.activitiesMap = activitiesUtils.toMap(newActivities);
     },
-    addActivity(state, activity) {
+    openAllInActivityHierarchy(state, activityId) {
+        activitiesUtils.openAllInActivityHierarchy(state.activitiesMap, activityId);
+    },
+    startActivityCreation(state, payload) {
+        const {group, parentActivityId} = payload;
+        let parentActivity = undefined;
         let targetActivities = undefined;
-        if (!activity.parent_activity_id) {
+        if (!parentActivityId) {
             targetActivities = state.activities;
         } else {
-            const parentActivity = state.activitiesMap.get(activity.parent_activity_id);
+            parentActivity = state.activitiesMap.get(parentActivityId);
             if (parentActivity) {
                 let childActivities = parentActivity.child_activities;
                 if (!childActivities) {
@@ -28,14 +50,71 @@ export default {
             }
         }
         if (targetActivities) {
-            targetActivities.push(activity);
-            state.activitiesMap.set(activity.id, activity);
+            const activity = {
+                id: activitiesUtils.activityCandidateId,
+                name: '',
+                group,
+                parent_activity_id: parentActivityId,
+            }
+            targetActivities.unshift(activity);
             activitiesUtils.sort(targetActivities);
+            state.activitiesMap.set(activity.id, activity);
+            state.activityInEditMode = activity;
+            if (parentActivity) {
+                parentActivity.opened = true;
+            }
         }
     },
-    removeActivity(state, activityId) {
-        activitiesUtils.deleteById(activityId, state.activities);
-        state.activitiesMap.delete(activityId);
+    startActivityRenaming(state, activityId) {
+        if (activityId) {
+            const existingActivity = state.activitiesMap.get(activityId);
+            if (existingActivity) {
+                existingActivity.nameBackup = existingActivity.name;
+                state.activityInEditMode = existingActivity;
+            }
+        }
+    },
+    removeActivityInEditMode(state) {
+        const activityInEditMode = state.activityInEditMode;
+        if (activityInEditMode) {
+            if (activitiesUtils.isActivityCandidate(activityInEditMode.id)) {
+                // TODO reimplement using activities map
+                activitiesUtils.deleteById(activityInEditMode.id, state.activities);
+                state.activitiesMap.delete(activityInEditMode.id);
+            } else {
+                activityInEditMode.name = activityInEditMode.nameBackup;
+                activityInEditMode.nameBackup = undefined;
+                sortContainingGroup(activityInEditMode, state.activities, state.activitiesMap);
+            }
+            state.activityInEditMode = undefined;
+        }
+    },
+    onActivityCreationSucceeded(state, generatedActivityId) {
+        if (generatedActivityId) {
+            const activityInEditMode = state.activityInEditMode;
+            if (activityInEditMode && activitiesUtils.isActivityCandidate(activityInEditMode.id)) {
+                state.activitiesMap.delete(activityInEditMode.id);
+                activityInEditMode.id = generatedActivityId;
+                state.activitiesMap.set(generatedActivityId, activityInEditMode);
+                state.activityInEditMode = undefined;
+                activityInEditMode.operationInProgress = false;
+            }
+        } else {
+            console.log('ID of generated activity is undefined.');
+        }
+    },
+    onActivityRenamingSucceeded(state, activity) {
+        if (activity) {
+            const activityInEditMode = state.activityInEditMode;
+            if (activityInEditMode && activityInEditMode.id === activity.id) {
+                activityInEditMode.nameBackup = undefined;
+                activityInEditMode.name = activity.name;
+                state.activityInEditMode = undefined;
+                activityInEditMode.operationInProgress = false;
+            }
+        } else {
+            console.log('Activity object is undefined for renamed activity.');
+        }
     },
     commitActivityCreation(state) {
         const activityCandidate = state.activitiesMap.get(activitiesUtils.activityCandidateId);
@@ -45,17 +124,11 @@ export default {
             state.activitiesMap.set(activityCandidate.id, activityCandidate);
         }
     },
-    refreshActivityCandidatePosition(state, newValue) {
-        const activityCandidate = state.activitiesMap.get(activitiesUtils.activityCandidateId);
-        if (activityCandidate) {
-            activityCandidate.name = newValue;
-            let activities = undefined;
-            if (!activityCandidate.parent_activity_id) {
-                activities = state.activities;
-            } else {
-                activities = state.activitiesMap.get(activityCandidate.parent_activity_id).child_activities;
-            }
-            activitiesUtils.sort(activities);
+    refreshEditedActivityPosition(state, newValue) {
+        const activityInEditMode = state.activityInEditMode;
+        if (activityInEditMode) {
+            activityInEditMode.name = newValue;
+            sortContainingGroup(activityInEditMode, state.activities, state.activitiesMap);
         }
     },
     refreshCurrentExpandLevel(state) {

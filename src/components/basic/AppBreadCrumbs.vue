@@ -24,20 +24,22 @@ const defaultActivitiesChain = [
 
 function generateActivitiesChain(activitiesMap, activityId, prependBaseLink = true) {
     let chain = [];
-    const activity = activitiesMap.get(activityId);
-    if (activity) {
-        chain.push({
-            name: activity.name,
-            link: `/activities/${activity.id}`,
-        });
-        if (activity.parent_activity_id) {
-            const parentChain = generateActivitiesChain(activitiesMap, activity.parent_activity_id, false);
-            chain = parentChain.concat(chain);
+    if (activitiesMap) {
+        const activity = activitiesMap.get(activityId);
+        if (activity) {
+            chain.push({
+                name: activity.name,
+                link: `/activities/${activity.id}`,
+            });
+            if (activity.parent_activity_id) {
+                const parentChain = generateActivitiesChain(activitiesMap, activity.parent_activity_id, false);
+                chain = parentChain.concat(chain);
+            }
         }
-    }
 
-    if (prependBaseLink) {
-        chain = defaultActivitiesChain.concat(chain);
+        if (prependBaseLink) {
+            chain = defaultActivitiesChain.concat(chain);
+        }
     }
     return chain;
 }
@@ -51,7 +53,7 @@ export default {
     computed: {
         activitiesMap() {
             return this.$store.getters['activities/activitiesMap'];
-        }
+        },
     },
     methods: {
         updateBreadCrumbs() {
@@ -85,7 +87,10 @@ export default {
     watch: {
         $route() {
             this.updateBreadCrumbs();
-        }
+        },
+        activitiesMap() {
+            this.updateBreadCrumbs();
+        },
     },
 }
 </script>

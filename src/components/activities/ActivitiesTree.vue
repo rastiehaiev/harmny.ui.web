@@ -13,7 +13,7 @@
         <header class="activities-tree__action-items">
             <h3 class="activities-tree__header">Activities Tree</h3>
             <div class="activities-tree__action-items--container">
-                <w-icon @click="createGroupActivityCandidateInRoot()">
+                <w-icon @click="startCreatingGroupActivityInRoot">
                     mdi mdi-folder-plus-outline
                 </w-icon>
                 <w-icon v-if="this.currentExpandLevel > 0" @click="collapseOneLevelVertical">
@@ -117,14 +117,8 @@ export default {
         }
     },
     methods: {
-        isActivityCandidate(activityId) {
-            return activitiesUtils.isActivityCandidate(activityId);
-        },
-        cancelActivityCreation() {
-            this.$store.commit('activities/removeActivity', activitiesUtils.activityCandidateId);
-        },
-        createGroupActivityCandidateInRoot() {
-            this.$store.dispatch('activities/createActivityCandidate', {group: true});
+        startCreatingGroupActivityInRoot() {
+            this.$store.dispatch('activities/startActivityCreation', {group: true});
         },
         expandAllVertical() {
             if (this.activities && this.activities.length && this.activities.length > 0) {
@@ -158,8 +152,8 @@ export default {
         activities() {
             return this.$store.getters['activities/activities'];
         },
-        activitiesMap() {
-            return this.$store.getters['activities/activitiesMap'];
+        activityInEditMode() {
+            return this.$store.getters['activities/activityInEditMode'];
         },
         currentExpandLevel() {
             return this.$store.getters['activities/currentExpandLevel'];
@@ -179,10 +173,16 @@ export default {
     },
     mounted() {
         activitiesService.listAll()
-            .then(response => {
-                const activities = response.data;
+            .then(activities => {
                 this.$store.dispatch('activities/applyFreshActivities', {activities});
+                const activityId = this.$route.params.activityId;
+                if (activityId) {
+                    this.$store.commit('activities/openAllInActivityHierarchy', activityId);
+                }
             });
+    },
+    beforeUnmount() {
+        this.$store.commit('activities/removeActivityInEditMode');
     },
 }
 </script>
