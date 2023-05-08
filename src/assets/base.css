@@ -20,6 +20,10 @@ html, body, #app {
     height: 100%;
 }
 
+h1, h2, h3, h4 {
+    font-weight: 300;
+}
+
 menu, ol, ul {
     list-style: none;
 }
@@ -32,6 +36,10 @@ menu, ol, ul {
     display: flex;
     flex-direction: row;
     height: 100%;
+}
+
+.w-tooltip {
+    font-size: 0.8rem;
 }
 
 .height-a {

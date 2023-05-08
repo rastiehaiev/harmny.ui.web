@@ -43,4 +43,13 @@ export default {
             return response.data;
         });
     },
+    async delete(activityId) {
+        return axios.delete(apiActivityUrl(activityId), {
+            headers: {
+                Authorization: `Bearer ${apiToken}`,
+            },
+        }).then(response => {
+            return response.data;
+        });
+    },
 };

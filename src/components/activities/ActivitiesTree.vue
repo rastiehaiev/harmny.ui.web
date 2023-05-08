@@ -13,18 +13,46 @@
         <header class="activities-tree__action-items">
             <h3 class="activities-tree__header">Activities Tree</h3>
             <div class="activities-tree__action-items--container">
-                <w-icon @click="startCreatingGroupActivityInRoot">
-                    mdi mdi-folder-plus-outline
-                </w-icon>
-                <w-icon v-if="this.currentExpandLevel > 0" @click="collapseOneLevelVertical">
-                    mdi mdi-format-vertical-align-center
-                </w-icon>
-                <w-icon v-if="this.currentExpandLevel === 0" @click="expandAllVertical">
-                    mdi mdi-unfold-more-horizontal
-                </w-icon>
-                <w-icon @click="collapseHorizontally" class="activities-tree__action-items--available-collapsed">
-                    mdi mdi-page-first
-                </w-icon>
+                <w-tooltip>
+                    <template #activator="{ on }">
+                        <w-icon @click="refreshActivities" v-on="on">
+                            mdi mdi-refresh
+                        </w-icon>
+                    </template>
+                    Refresh
+                </w-tooltip>
+                <w-tooltip>
+                    <template #activator="{ on }">
+                        <w-icon @click="startCreatingGroupActivityInRoot" v-on="on">
+                            mdi mdi-folder-plus-outline
+                        </w-icon>
+                    </template>
+                    Create activity group
+                </w-tooltip>
+                <w-tooltip v-if="this.currentExpandLevel > 0">
+                    <template #activator="{ on }">
+                        <w-icon @click="collapseOneLevelVertical" v-on="on">
+                            mdi mdi-format-vertical-align-center
+                        </w-icon>
+                    </template>
+                    Collapse vertically
+                </w-tooltip>
+                <w-tooltip v-if="this.currentExpandLevel === 0">
+                    <template #activator="{ on }">
+                        <w-icon @click="expandAllVertical" v-on="on">
+                            mdi mdi-unfold-more-horizontal
+                        </w-icon>
+                    </template>
+                    Expand vertically
+                </w-tooltip>
+                <w-tooltip>
+                    <template #activator="{ on }">
+                        <w-icon @click="collapseHorizontally" v-on="on" class="activities-tree__action-items--available-collapsed">
+                            mdi mdi-page-first
+                        </w-icon>
+                    </template>
+                    Collapse horizontally
+                </w-tooltip>
             </div>
         </header>
         <div class="activities-tree">
@@ -38,13 +66,34 @@
             </ul>
         </div>
     </section>
+    <w-dialog @before-close="cancelActivityDeletion" v-model="showDeleteActivityDialog" width="25rem">
+        <div class="activities-tree-section__delete-activity-dialog-container">
+            <header class="activities-tree-section__delete-activity-dialog-container--header">
+                <h3>Delete activity?</h3>
+                <w-icon @click="cancelActivityDeletion">mdi mdi-close</w-icon>
+            </header>
+            <section class="activities-tree-section__delete-activity-dialog-container--body">
+                <template v-if="activityToBeDeleted && activityToBeDeleted.group">
+                    Are you sure you want to delete activity group? It will delete all child activities and activity
+                    groups with all the data available, permanently.
+                </template>
+                <template v-if="activityToBeDeleted && !activityToBeDeleted.group">
+                    Are you sure you want to delete activity?<br/>It will delete all the data available, permanently.
+                </template>
+            </section>
+            <section class="activities-tree-section__delete-activity-dialog-container--action-items">
+                <hy-button @click="cancelActivityDeletion">Cancel</hy-button>
+                <hy-button button-style="red" @click="confirmActivityDeletion">Delete</hy-button>
+            </section>
+        </div>
+    </w-dialog>
 </template>
 
 <script>
 
 import activitiesService from "@/services/activities-service.js";
-import activitiesUtils from "@/utils/activities-utils.js";
 import ActivitiesTreeItem from "@/components/activities/ActivitiesTreeItem.vue";
+import HyButton from "@/components/basic/elements/HyButton.vue";
 
 function expandVertical(activity) {
     if (activity.group && activity.child_activities && activity.child_activities.length && activity.child_activities.length > 0) {
@@ -109,9 +158,10 @@ const activitiesTreeConfig = {
 
 export default {
     name: 'activities-tree',
-    components: {ActivitiesTreeItem},
+    components: {HyButton, ActivitiesTreeItem},
     data() {
         return {
+            showDeleteActivityDialog: false,
             activitiesTreeCollapseViewDisplay: undefined,
             activitiesTreeSectionDisplay: undefined,
         }
@@ -119,6 +169,31 @@ export default {
     methods: {
         startCreatingGroupActivityInRoot() {
             this.$store.dispatch('activities/startActivityCreation', {group: true});
+        },
+        refreshActivities() {
+            activitiesService.listAll()
+                .then(activities => {
+                    this.$store.dispatch('activities/applyFreshActivities', {activities});
+                    const activityId = this.$route.params.activityId;
+                    if (activityId) {
+                        this.$store.commit('activities/openAllInActivityHierarchy', activityId);
+                    }
+                });
+        },
+        confirmActivityDeletion() {
+            const activity = this.activityToBeDeleted;
+            this.$store.commit('notifications/setActivityToBeDeleted', undefined);
+            if (activity) {
+                this.$store.dispatch('activities/deleteActivity', activity.id);
+                if (activity.parent_activity_id) {
+                    this.$router.push({name: 'activity', params: {activityId: activity.parent_activity_id}});
+                } else {
+                    this.$router.push({name: 'activities'});
+                }
+            }
+        },
+        cancelActivityDeletion() {
+            this.$store.commit('notifications/setActivityToBeDeleted', undefined);
         },
         expandAllVertical() {
             if (this.activities && this.activities.length && this.activities.length > 0) {
@@ -161,25 +236,24 @@ export default {
         isMobileView() {
             return this.$store.getters.isMobileView;
         },
+        activityToBeDeleted() {
+            return this.$store.getters['notifications/activityToBeDeleted'];
+        },
     },
     watch: {
         '$store.state.mobile': function () {
             this.setDisplayProperties();
-        }
+        },
+        activityToBeDeleted(activity) {
+            this.showDeleteActivityDialog = !!activity;
+        },
     },
     beforeMount() {
         this.$store.commit('activities/refreshCurrentExpandLevel');
         this.setDisplayProperties();
     },
     mounted() {
-        activitiesService.listAll()
-            .then(activities => {
-                this.$store.dispatch('activities/applyFreshActivities', {activities});
-                const activityId = this.$route.params.activityId;
-                if (activityId) {
-                    this.$store.commit('activities/openAllInActivityHierarchy', activityId);
-                }
-            });
+        this.refreshActivities();
     },
     beforeUnmount() {
         this.$store.commit('activities/removeActivityInEditMode');
@@ -223,8 +297,8 @@ export default {
 
 .activities-tree__header {
     font-size: 1rem;
-    font-weight: 350;
     color: #ACABAB;
+    font-family: inherit;
 }
 
 .activities-tree-section {
@@ -301,6 +375,46 @@ export default {
 .activities-tree::-webkit-scrollbar-thumb {
     background-color: rgba(15, 200, 231, 0.3);
     border-radius: 0.2rem;
+}
+
+.activities-tree-section__delete-activity-dialog-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 0.8rem 1rem;
+    gap: 1.2rem;
+}
+
+.activities-tree-section__delete-activity-dialog-container--header {
+    display: flex;
+    align-items: center;
+}
+
+.activities-tree-section__delete-activity-dialog-container--header h3 {
+    display: inline-flex;
+    font-weight: 400;
+    flex-grow: 10;
+    font-size: 1.25rem;
+}
+
+.activities-tree-section__delete-activity-dialog-container--header i {
+    cursor: pointer;
+    color: #909090;
+    font-size: 1.6rem;
+}
+
+.activities-tree-section__delete-activity-dialog-container--header i:hover {
+    color: #444343;
+}
+
+.activities-tree-section__delete-activity-dialog-container--body {
+    font-size: 1rem;
+    line-height: 1.4rem;
+}
+
+.activities-tree-section__delete-activity-dialog-container--action-items {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: end;
 }
 
 </style>

@@ -76,7 +76,7 @@
                                 <h3>Rename</h3>
                             </template>
                         </activity-menu-item>
-                        <activity-menu-item @click.prevent="deleteActivity(activity)">
+                        <activity-menu-item @click.prevent="requestActivityDeletion(activity)">
                             <template #left-icon>
                                 <w-icon>mdi mdi-delete</w-icon>
                             </template>
@@ -160,8 +160,8 @@ export default {
         copyToClipboard(activityId) {
             copy(`${configProvider.uiActivitiesUrl}/${activityId}`);
         },
-        deleteActivity(activity) {
-            activity.operationInProgress = !activity.operationInProgress;
+        requestActivityDeletion(activity) {
+            this.$store.commit('notifications/setActivityToBeDeleted', activity);
         },
         onActivityCandidateLoseFocus() {
             nextTick().then(() => {

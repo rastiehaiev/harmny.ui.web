@@ -87,4 +87,20 @@ export default {
         }
         return Promise.resolve();
     },
+    deleteActivity(context, activityId) {
+        if (activityId) {
+            const activity = context.getters.activitiesMap.get(activityId);
+            if (activity) {
+                activity.operationInProgress = true;
+                return activitiesService.delete(activityId)
+                    .then(() => {
+                        context.commit('onActivityDeleted', activityId);
+                        return {activityId};
+                    }).catch((error) => {
+                        activity.operationInProgress = false;
+                        return {error};
+                    });
+            }
+        }
+    },
 };

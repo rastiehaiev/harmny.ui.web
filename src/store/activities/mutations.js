@@ -116,6 +116,11 @@ export default {
             console.log('Activity object is undefined for renamed activity.');
         }
     },
+    onActivityDeleted(state, activityId) {
+        // TODO reimplement using activities map
+        activitiesUtils.deleteById(activityId, state.activities);
+        state.activitiesMap.delete(activityId);
+    },
     commitActivityCreation(state) {
         const activityCandidate = state.activitiesMap.get(activitiesUtils.activityCandidateId);
         if (activityCandidate) {
