@@ -95,18 +95,18 @@
 }
 
 .app-sidebar__item i {
-    color: #909090;
+    color: var(--color-gray-2);
 }
 
 .app-sidebar__item i:hover,
 .app-sidebar__item i:active {
-    color: #606060;
+    color: var(--color-gray-3);
 }
 
 .app-sidebar__item--active i,
 .app-sidebar__item--active:hover i,
 .app-sidebar__item--active:active i {
-    color: #B243C5;
+    color: var(--color-magenta-1);
 }
 
 .app-sidebar__link-profile {

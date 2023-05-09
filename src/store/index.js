@@ -8,6 +8,7 @@ import getters from "@/store/getters.js";
 const store = createStore({
     state: {
         mobile: false,
+        lastActivityId: undefined,
     },
     mutations,
     getters,

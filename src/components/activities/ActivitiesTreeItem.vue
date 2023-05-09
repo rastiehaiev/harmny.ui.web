@@ -238,11 +238,11 @@ export default {
 
 .activity-tree-item__action-items-area--options {
     opacity: 0;
-    color: #444343;
+    color: var(--color-gray-4);
 }
 
 .activity_item__menu-actuator i {
-    color: #909090;
+    color: var(--color-gray-2);
 }
 
 .activities-tree__items .list-item__container:active .activity-tree-item__action-items-area--options,
@@ -251,11 +251,11 @@ export default {
 }
 
 .router-link-active.list-item__container .list-item__left-icon-area .activity_item__icon-activity {
-    color: #B243C5;
+    color: var(--color-magenta-1);
 }
 
 .router-link-active.list-item__container .list-item__left-icon-area .activity_item__icon-activity-group {
-    color: #1a6207;
+    color: var(--color-green-2);
 }
 
 .activities-tree__new-activity--action-item {

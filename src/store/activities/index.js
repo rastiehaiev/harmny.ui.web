@@ -9,6 +9,7 @@ export default {
             activities: undefined,
             activitiesMap: undefined,
             activityInEditMode: undefined,
+            activitiesLoadingInProgress: true,
             currentExpandLevel: 0,
         }
     },

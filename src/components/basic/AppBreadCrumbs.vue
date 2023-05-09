@@ -125,7 +125,7 @@ export default {
 }
 
 span.app-bread-crumbs__item {
-    color: #444343;
+    color: var(--color-gray-4);
     font-size: 1rem;
 }
 
@@ -147,13 +147,13 @@ span.app-bread-crumbs__item {
     }
 
     a.app-bread-crumbs__item {
-        color: #147c98;
+        color: var(--color-link);
         text-decoration: none;
         font-weight: 300;
     }
 
     a.app-bread-crumbs__item:hover {
-        color: #279b91;
+        color: var(--color-link-hover);
     }
 }
 

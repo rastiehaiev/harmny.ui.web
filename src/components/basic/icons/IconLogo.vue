@@ -14,7 +14,7 @@
             <linearGradient id="Noname_gradient_20" x1="-24.6" y1="-9.45" x2="49.28" y2="30.72"
                             gradientUnits="userSpaceOnUse">
                 <stop offset="0" stop-color="#4aa4e5"/>
-                <stop offset="1" stop-color="#3260eb"/>
+                <stop offset="1" stop-color="#8bf9a0"/>
             </linearGradient>
         </defs>
         <path class="cls-1" d="M53.46,10V44.43a8.6,8.6,0,1,1-17.2,0h0V10Z" transform="translate(-1.81 -1.38)"/>

@@ -23,7 +23,9 @@
                 </w-tooltip>
                 <w-tooltip>
                     <template #activator="{ on }">
-                        <w-icon @click="startCreatingGroupActivityInRoot" v-on="on">
+                        <w-icon @click="startCreatingGroupActivityInRoot"
+                                v-on="on"
+                                :class="{'activities-tree__action-items--animated-create-folder-icon': !activitiesLoadingInProgress && (!this.activities || this.activities.length === 0)}">
                             mdi mdi-folder-plus-outline
                         </w-icon>
                     </template>
@@ -37,7 +39,7 @@
                     </template>
                     Collapse vertically
                 </w-tooltip>
-                <w-tooltip v-if="this.currentExpandLevel === 0">
+                <w-tooltip v-if="this.currentExpandLevel === 0 && this.activities && this.activities.length > 0">
                     <template #activator="{ on }">
                         <w-icon @click="expandAllVertical" v-on="on">
                             mdi mdi-unfold-more-horizontal
@@ -56,7 +58,7 @@
             </div>
         </header>
         <div class="activities-tree">
-            <ul class="activities-tree__items">
+            <ul v-if="activities && activities.length > 0" class="activities-tree__items">
                 <activities-tree-item
                         v-for="activity in activities"
                         :key="activity.id"
@@ -64,6 +66,10 @@
                         :level="0"
                 />
             </ul>
+            <div v-else-if="activitiesLoadingInProgress"></div>
+            <div v-else class="activities-tree__no-activities-container">
+                No activities created yet.
+            </div>
         </div>
     </section>
     <w-dialog @before-close="cancelActivityDeletion" v-model="showDeleteActivityDialog" width="25rem">
@@ -178,6 +184,10 @@ export default {
                     if (activityId) {
                         this.$store.commit('activities/openAllInActivityHierarchy', activityId);
                     }
+                    this.$store.commit('activities/finishActivitiesLoading');
+                })
+                .catch(() => {
+                    this.$store.commit('activities/finishActivitiesLoading');
                 });
         },
         confirmActivityDeletion() {
@@ -239,6 +249,9 @@ export default {
         activityToBeDeleted() {
             return this.$store.getters['notifications/activityToBeDeleted'];
         },
+        activitiesLoadingInProgress() {
+            return this.$store.getters['activities/activitiesLoadingInProgress'];
+        },
     },
     watch: {
         '$store.state.mobile': function () {
@@ -266,7 +279,7 @@ export default {
     width: 2.8rem;
     height: 100%;
     background-color: rgba(186, 224, 223, 0.09);
-    border-right: 1px solid #EAEAEA;
+    border-right: 1px solid var(--color-gray-0);
     cursor: pointer;
 }
 
@@ -290,14 +303,14 @@ export default {
 
 .activities-tree__collapsed-view i {
     font-size: 1.4rem;
-    color: #909090;
+    color: var(--color-gray-2);
     transform: rotateZ(-90deg);
     transform-origin: center center;
 }
 
 .activities-tree__header {
     font-size: 1rem;
-    color: #ACABAB;
+    color: var(--color-gray-1);
     font-family: inherit;
 }
 
@@ -338,7 +351,7 @@ export default {
 
 .activities-tree__action-items--container i {
     font-size: 1.3rem;
-    color: #909090;
+    color: var(--color-gray-2);
     cursor: pointer;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -377,6 +390,14 @@ export default {
     border-radius: 0.2rem;
 }
 
+.activities-tree__no-activities-container {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-gray-4);
+}
+
 .activities-tree-section__delete-activity-dialog-container {
     display: flex;
     flex-direction: column;
@@ -398,12 +419,12 @@ export default {
 
 .activities-tree-section__delete-activity-dialog-container--header i {
     cursor: pointer;
-    color: #909090;
+    color: var(--color-gray-2);
     font-size: 1.6rem;
 }
 
 .activities-tree-section__delete-activity-dialog-container--header i:hover {
-    color: #444343;
+    color: var(--color-gray-4);
 }
 
 .activities-tree-section__delete-activity-dialog-container--body {
@@ -415,6 +436,19 @@ export default {
     display: flex;
     gap: 0.8rem;
     justify-content: end;
+}
+
+.activities-tree__action-items--animated-create-folder-icon {
+    animation-name: animate-create-folder-icon;
+    animation-duration: 3s;
+    animation-iteration-count: 20;
+}
+
+@keyframes animate-create-folder-icon {
+    0%  {color: red;}
+    25%   {color: green;}
+    75%   {color: blue;}
+    100%   {color: red;}
 }
 
 </style>

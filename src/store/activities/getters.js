@@ -12,6 +12,9 @@ export default {
         const activityInEditMode = state.activityInEditMode;
         return activityInEditMode ? activityInEditMode.id : undefined;
     },
+    activitiesLoadingInProgress(state) {
+        return state.activitiesLoadingInProgress;
+    },
     currentExpandLevel(state) {
         return state.currentExpandLevel;
     },

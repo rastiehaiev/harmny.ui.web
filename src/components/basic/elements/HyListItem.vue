@@ -46,7 +46,7 @@ export default {
         },
         backgroundOnHover: {
             type: String,
-            default: '#0FC8E714',
+            default: 'var(--color-side-list-hover)',
         },
         paddingLeft: {
             type: String,
@@ -100,7 +100,7 @@ export default {
 }
 
 .list-item__container:hover .list-item__left-icon-area i {
-    color: #606060;
+    color: var(--color-gray-3);
 }
 
 .list-item__base-content-area {
@@ -115,7 +115,7 @@ export default {
 
 .list-item__base-content-area h3,
 .list-item__base-content-area h4 {
-    color: #444343;
+    color: var(--color-gray-4);
     font-weight: 300;
     font-family: Inter, Helvetica, monospace;
     white-space: nowrap;
@@ -133,7 +133,7 @@ export default {
 
 .list-item__base-content-area input {
     width: 100%;
-    color: #444343;
+    color: var(--color-gray-4);
     font-size: 1rem;
     font-weight: 300;
     font-family: Inter, Helvetica, monospace;

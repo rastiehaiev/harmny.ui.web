@@ -136,6 +136,9 @@ export default {
             sortContainingGroup(activityInEditMode, state.activities, state.activitiesMap);
         }
     },
+    finishActivitiesLoading(state) {
+        state.activitiesLoadingInProgress = false;
+    },
     refreshCurrentExpandLevel(state) {
         let currentExpandLevel = 0;
         if (state.activities && state.activities.length && state.activities.length > 0) {

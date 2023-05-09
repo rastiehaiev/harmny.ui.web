@@ -46,7 +46,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@250;300;350;400;500&display=swap');
 
 html {
-    color: #444343;
+    color: var(--color-gray-4);
     font-weight: 300;
     font-family: Inter, Helvetica, monospace;
     overflow: hidden;

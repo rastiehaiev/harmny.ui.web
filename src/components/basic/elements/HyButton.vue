@@ -46,12 +46,12 @@ button.hy-button-blue:hover {
 }
 
 button.hy-button-blue:active {
-    background-color: #147c98;
+    background-color: var(--color-link);
 }
 
 button.hy-button-red {
-    color: red;
-    border-color: red;
+    color: var(--color-red-2);
+    border-color: var(--color-red-2);
     border-style: solid;
     background-color: white;
 }
