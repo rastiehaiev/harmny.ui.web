@@ -8,8 +8,7 @@
                 <div class="hy-menu__menu-area"
                      @click="closeMenu"
                      :style="{'top': toPx(menuCoordTop), 'right': toPx(menuCoordRight), 'bottom': toPx(menuCoordBottom), 'left': toPx(menuCoordLeft)}">
-                    <slot name="menu-area">
-                    </slot>
+                    <slot name="menu-area"></slot>
                 </div>
             </OnClickOutside>
         </Teleport>

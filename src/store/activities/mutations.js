@@ -1,4 +1,5 @@
 import activitiesUtils from "@/utils/activities-utils.js";
+import validationService from "@/services/validation-service.js";
 
 function uuid() {
     return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
@@ -121,19 +122,26 @@ export default {
         activitiesUtils.deleteById(activityId, state.activities);
         state.activitiesMap.delete(activityId);
     },
-    commitActivityCreation(state) {
-        const activityCandidate = state.activitiesMap.get(activitiesUtils.activityCandidateId);
-        if (activityCandidate) {
-            activityCandidate.id = uuid();
-            state.activitiesMap.delete(activitiesUtils.activityCandidateId);
-            state.activitiesMap.set(activityCandidate.id, activityCandidate);
-        }
-    },
     refreshEditedActivityPosition(state, newValue) {
         const activityInEditMode = state.activityInEditMode;
         if (activityInEditMode) {
             activityInEditMode.name = newValue;
             sortContainingGroup(activityInEditMode, state.activities, state.activitiesMap);
+        }
+    },
+    validateEditedActivity(state) {
+        const activityInEditMode = state.activityInEditMode;
+        if (activityInEditMode && activityInEditMode.name.length > 1) {
+            // start validating when length is more than 1
+
+            const activities = state.activities;
+            const activitiesMap = state.activitiesMap;
+            const validationErrorCode = validationService.validateEditedActivity(activityInEditMode, activities, activitiesMap);
+            if (validationErrorCode) {
+                activityInEditMode.errorCode = validationErrorCode;
+            } else {
+                activityInEditMode.errorCode = undefined;
+            }
         }
     },
     finishActivitiesLoading(state) {

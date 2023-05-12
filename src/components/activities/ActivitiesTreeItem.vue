@@ -1,100 +1,70 @@
 <template>
-    <hy-list-item :key="activity.id" :route-to="routeTo(activity.id)" :level="level" padding-left="1.2rem">
-        <template #left-icon>
-            <w-icon class="activity_item__icon-activity" v-if="!activity.group">mdi mdi-rocket-launch</w-icon>
-            <w-icon class="activity_item__icon-activity-group" v-else-if="!activity.child_activities || activity.child_activities.length === 0">
-                mdi mdi-folder-outline
-            </w-icon>
-            <w-icon class="activity_item__icon-activity-group" @click.prevent="expandGroup(activity.id)" v-else-if="!activity.opened">
-                mdi mdi-folder
-            </w-icon>
-            <w-icon class="activity_item__icon-activity-group" @click.prevent="collapseGroup(activity.id)" v-else>mdi
-                mdi-folder-open
-            </w-icon>
-        </template>
-        <template #base-content>
-            <input v-if="activity.id === activityInEditModeId"
-                   type="text"
-                   :disabled="activity.operationInProgress"
-                   v-model="activityInEditModeName"
-                   @blur="onActivityCandidateLoseFocus"
-                   @keyup.enter="commitActivityEditMode(activity.id)"
-                   ref="activityInEditModeInputRef"
-                   @click.prevent
-            />
-            <h4 v-else :title="activity.name">{{ activity.name }}</h4>
-        </template>
-        <template #action-items>
-            <div v-if="activity.operationInProgress" class="activity-tree-item__action-items-area">
-                <w-progress circle color="yellow" bg-color="cyan"></w-progress>
-            </div>
-            <div v-else-if="activity.id === activityInEditModeId" class="activity-tree-item__action-items-area">
-                <w-icon class="color-cancel activities-tree__new-activity--action-item" @click="cancelActivityEditMode">
-                    mdi mdi-close-circle-outline
-                </w-icon>
-                <w-icon class="color-ok activities-tree__new-activity--action-item" @click="commitActivityEditMode">
-                    mdi mdi-check-circle-outline
-                </w-icon>
-            </div>
-            <hy-menu v-else stick-to="right-top">
-                <template #actuator>
-                    <div class="activity-tree-item__action-items-area activity-tree-item__action-items-area--options">
-                        <w-icon>mdi mdi-dots-horizontal</w-icon>
+    <hy-list-item :key="activity.id"
+                  :route-to="routeTo(activity.id)"
+                  :level="level"
+                  :error-code="activity.errorCode"
+                  padding-left="1.2rem"
+                  cursor="pointer">
+        <template #content>
+            <hy-list-item-content>
+                <template #left-icon>
+                    <w-icon class="activity_item__icon-activity" v-if="!activity.group">
+                        mdi mdi-rocket-launch
+                    </w-icon>
+                    <w-icon class="activity_item__icon-activity-group" v-else-if="!activity.child_activities || activity.child_activities.length === 0">
+                        mdi mdi-folder-outline
+                    </w-icon>
+                    <w-icon class="activity_item__icon-activity-group" @click.prevent="expandGroup(activity)" v-else-if="!activity.opened">
+                        mdi mdi-folder
+                    </w-icon>
+                    <w-icon class="activity_item__icon-activity-group" @click.prevent="collapseGroup(activity)" v-else>
+                        mdi mdi-folder-open
+                    </w-icon>
+                </template>
+                <template #base-content>
+                    <input v-if="activity.id === activityInEditModeId"
+                           type="text"
+                           :disabled="activity.operationInProgress"
+                           v-model.trim="activityInEditModeName"
+                           @blur="onActivityCandidateLoseFocus"
+                           @keyup.enter="commitActivityEditMode(activity.id)"
+                           ref="activityInEditModeInputRef"
+                           @click.prevent
+                    />
+                    <h4 v-else :title="activity.name">{{ activity.name }}</h4>
+                </template>
+                <template #action-items>
+                    <div v-if="activity.operationInProgress" class="activity-tree-item__action-items-area">
+                        <w-progress circle color="yellow" bg-color="cyan"></w-progress>
                     </div>
+                    <div v-else-if="activity.id === activityInEditModeId" class="activity-tree-item__action-items-area">
+                        <w-icon class="activities-tree__new-activity--action-item color-cancel" @click="cancelActivityEditMode">
+                            mdi mdi-close-circle-outline
+                        </w-icon>
+                        <w-icon v-if="!activity.errorCode" class="activities-tree__new-activity--action-item color-ok" @click="commitActivityEditMode(activity.id)">
+                            mdi mdi-check-circle-outline
+                        </w-icon>
+                    </div>
+                    <hy-menu v-else stick-to="right-top">
+                        <template #actuator>
+                            <div class="activity-tree-item__action-items-area activity-tree-item__action-items-area--options">
+                                <w-icon>mdi mdi-dots-horizontal</w-icon>
+                            </div>
+                        </template>
+                        <template #menu-area>
+                            <activities-tree-item-menu @on-activity-edit="(name) => onActivityEditStarted(name)" :activity="activity" :level="level"></activities-tree-item-menu>
+                        </template>
+                    </hy-menu>
                 </template>
-                <template #menu-area>
-                    <ul>
-                        <activity-menu-item v-if="activity.group && level < 2" @click.prevent="startActivityCreation(true, activity.id)">
-                            <template #left-icon>
-                                <w-icon>mdi mdi-folder-plus-outline</w-icon>
-                            </template>
-                            <template #base-content>
-                                <h3>Create activity group</h3>
-                            </template>
-                        </activity-menu-item>
-                        <activity-menu-item v-if="activity.group && level < 3" @click.prevent="startActivityCreation(false, activity.id)">
-                            <template #left-icon>
-                                <w-icon>mdi mdi-rocket-launch</w-icon>
-                            </template>
-                            <template #base-content>
-                                <h3>Create activity</h3>
-                            </template>
-                        </activity-menu-item>
-                        <activity-menu-item @click.prevent="copyToClipboard(activity.id)">
-                            <template #left-icon>
-                                <w-icon>mdi mdi-content-copy</w-icon>
-                            </template>
-                            <template #base-content>
-                                <h3>Copy link</h3>
-                            </template>
-                        </activity-menu-item>
-                        <activity-menu-item @click.prevent="startActivityRenaming(activity)">
-                            <template #left-icon>
-                                <w-icon>mdi mdi-rename</w-icon>
-                            </template>
-                            <template #base-content>
-                                <h3>Rename</h3>
-                            </template>
-                        </activity-menu-item>
-                        <activity-menu-item @click.prevent="requestActivityDeletion(activity)">
-                            <template #left-icon>
-                                <w-icon>mdi mdi-delete</w-icon>
-                            </template>
-                            <template #base-content>
-                                <h3>Delete</h3>
-                            </template>
-                        </activity-menu-item>
-                    </ul>
-                </template>
-            </hy-menu>
+            </hy-list-item-content>
         </template>
         <template #additional-content v-if="activity.group && activity.child_activities && activity.child_activities.length !== 0">
             <ul :class="{'activity-items--closed': !activity.opened}" class="activities-tree__items">
                 <activities-tree-item
-                        v-for="child in activity.child_activities"
-                        :key="child.id"
-                        :activity="child"
-                        :level="level + 1"
+                    v-for="child in activity.child_activities"
+                    :key="child.id"
+                    :activity="child"
+                    :level="level + 1"
                 />
             </ul>
         </template>
@@ -103,65 +73,54 @@
 
 <script>
 
-import {useClipboard} from '@vueuse/core';
-
-const {copy} = useClipboard();
-
-import configProvider from "@/utils/config-provider.js";
-import activitiesUtils from "@/utils/activities-utils.js";
-import HyListItem from "@/components/basic/elements/HyListItem.vue";
-import HyMenu from "@/components/basic/elements/HyMenu.vue";
-import ActivityMenuItem from "@/components/activities/ActivityMenuItem.vue";
 import {nextTick} from "vue";
+import activitiesUtils from "@/utils/activities-utils";
+import HyMenu from "@/components/basic/elements/HyMenu.vue";
+import HyListItem from "@/components/basic/elements/HyListItem.vue";
+import HyListItemContent from "@/components/basic/elements/HyListItemContent.vue";
+import ActivitiesTreeItemMenu from "@/components/activities/ActivitiesTreeItemMenu.vue";
 
 export default {
     name: 'activities-tree-item',
-    components: {HyMenu, HyListItem, ActivityMenuItem},
+    components: {ActivitiesTreeItemMenu, HyMenu, HyListItemContent, HyListItem},
     data() {
         return {
-            activityInEditModeName: undefined,
             expandLevelChanges: 0,
-            currentExpandLevel: 0,
+            activityInEditModeName: undefined,
         }
     },
-    props: ['activity', 'level'],
-    methods: {
-        startActivityCreation(group, parentActivityId) {
-            this.$store.dispatch('activities/startActivityCreation', {group, parentActivityId});
+    props: {
+        activity: {
+            required: true,
         },
-        startActivityRenaming(activity) {
-            this.$store.dispatch('activities/startActivityRenaming', {activityId: activity.id});
-            this.activityInEditModeName = activity.name;
-            this.onActivityCandidateLoseFocus()
+        level: {
+            type: Number,
+            default: 0,
+        },
+    },
+    methods: {
+        routeTo(activityId) {
+            return !activitiesUtils.isActivityCandidate(activityId) ? `/activities/${activityId}` : undefined;
+        },
+        onActivityEditStarted(name) {
+            this.activityInEditModeName = name;
+            this.onActivityCandidateLoseFocus();
         },
         cancelActivityEditMode() {
             this.$store.dispatch('activities/cancelActivityEditMode');
         },
-        commitActivityEditMode(activityId) {
-            let errorResponseMaybe = undefined;
-            if (activitiesUtils.isActivityCandidate(activityId)) {
-                errorResponseMaybe = this.$store.dispatch('activities/commitActivityCreation');
-            } else {
-                errorResponseMaybe = this.$store.dispatch('activities/commitActivityRenaming');
-            }
-            if (errorResponseMaybe) {
-                errorResponseMaybe.then((result) => {
-                    if (result) {
-                        const {error, activityId} = result;
-                        if (error) {
-                            console.log(error);
-                        } else if (activityId) {
-                            this.$router.push({name: 'activity', params: {activityId}});
-                        }
+        commitActivityEditMode() {
+            const errorResponseMaybe = this.$store.dispatch('activities/commitActivityInEditMode');
+            errorResponseMaybe.then((result) => {
+                if (result) {
+                    const {errorCode, activityId} = result;
+                    if (errorCode) {
+                        console.log(errorCode);
+                    } else if (activityId) {
+                        this.$router.push({name: 'activity', params: {activityId}});
                     }
-                });
-            }
-        },
-        copyToClipboard(activityId) {
-            copy(`${configProvider.uiActivitiesUrl}/${activityId}`);
-        },
-        requestActivityDeletion(activity) {
-            this.$store.commit('notifications/setActivityToBeDeleted', activity);
+                }
+            });
         },
         onActivityCandidateLoseFocus() {
             nextTick().then(() => {
@@ -171,18 +130,13 @@ export default {
                 }
             });
         },
-        routeTo(activityId) {
-            return !activitiesUtils.isActivityCandidate(activityId) ? `/activities/${activityId}` : undefined;
-        },
-        collapseGroup(activityId) {
-            const activity = this.activitiesMap.get(activityId);
+        collapseGroup(activity) {
             if (activity) {
                 activity.opened = false;
                 this.expandLevelChanges--;
             }
         },
-        expandGroup(activityId) {
-            const activity = this.activitiesMap.get(activityId);
+        expandGroup(activity) {
             if (activity) {
                 activity.opened = true;
                 this.expandLevelChanges++;
@@ -190,15 +144,6 @@ export default {
         },
     },
     computed: {
-        activitiesMap() {
-            return this.$store.getters['activities/activitiesMap'];
-        },
-        activities() {
-            return this.$store.getters['activities/activities'];
-        },
-        activityInEditMode() {
-            return this.$store.getters['activities/activityInEditMode'];
-        },
         activityInEditModeId() {
             return this.$store.getters['activities/activityInEditModeId'];
         },
@@ -209,6 +154,7 @@ export default {
         },
         activityInEditModeName(newValue) {
             this.$store.commit('activities/refreshEditedActivityPosition', newValue);
+            this.$store.commit('activities/validateEditedActivity');
         },
     },
     mounted() {
@@ -218,7 +164,6 @@ export default {
 </script>
 
 <style scoped>
-
 .activity-items--closed {
     display: none;
 }
@@ -245,16 +190,16 @@ export default {
     color: var(--color-gray-2);
 }
 
-.activities-tree__items .list-item__container:active .activity-tree-item__action-items-area--options,
-.activities-tree__items .list-item__container:hover .activity-tree-item__action-items-area--options {
+.activities-tree__items .hy-list-item__container:active .activity-tree-item__action-items-area--options,
+.activities-tree__items .hy-list-item__container:hover .activity-tree-item__action-items-area--options {
     opacity: 1;
 }
 
-.router-link-active.list-item__container .list-item__left-icon-area .activity_item__icon-activity {
+.hy-list-item__container.router-link-active .hy-list-item-content .hy-list-item-content__left-icon-area i.activity_item__icon-activity {
     color: var(--color-magenta-1);
 }
 
-.router-link-active.list-item__container .list-item__left-icon-area .activity_item__icon-activity-group {
+.hy-list-item__container.router-link-active .hy-list-item-content .hy-list-item-content__left-icon-area i.activity_item__icon-activity-group {
     color: var(--color-green-2);
 }
 
@@ -262,5 +207,4 @@ export default {
     font-size: 1.4rem;
     cursor: pointer;
 }
-
 </style>

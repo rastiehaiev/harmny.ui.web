@@ -46,6 +46,7 @@ button.hy-button-blue:hover {
 }
 
 button.hy-button-blue:active {
+    color: white;
     background-color: var(--color-link);
 }
 
@@ -61,6 +62,7 @@ button.hy-button-red:hover {
 }
 
 button.hy-button-red:active {
-    background-color: red;
+    color: white;
+    background-color: var(--color-red-2);
 }
 </style>

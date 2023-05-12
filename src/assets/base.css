@@ -35,8 +35,10 @@ menu, ol, ul {
     --color-gray-4: #444343;
     --color-green-1: rgba(30,115,7,0.66);
     --color-green-2: #1a6207;
+    --color-red-0: #fff1f1;
     --color-red-1: rgba(255,0,0,0.66);
     --color-red-2: red;
+    --color-red-3: #d00000;
     --color-magenta-1: #B243C5;
     --color-link: #147c98;
     --color-link-hover: #279b91;

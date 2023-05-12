@@ -1,21 +1,16 @@
 <template>
     <div class="app-content__main">
-        <activities-tree></activities-tree>
-        <section class="activity-section">
-
-        </section>
+        <activities-tree-side-bar2></activities-tree-side-bar2>
+        <section class="activity-section"></section>
     </div>
 </template>
 
 <script>
-import ActivitiesTree from "@/components/activities/ActivitiesTree.vue";
+import ActivitiesTreeSideBar2 from "@/components/activities/ActivitiesTreeSideBar.vue";
 
 export default {
     components: {
-        ActivitiesTree,
-    },
-    data() {
-        return {}
+        ActivitiesTreeSideBar2,
     },
     methods: {
         updateLastActivityId(route) {
@@ -54,7 +49,4 @@ export default {
     display: flex;
 }
 
-.activity-section i {
-    font-size: 2.4rem;
-}
 </style>

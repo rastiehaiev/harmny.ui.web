@@ -79,6 +79,6 @@ export default {
         return !activityId || activityId === this.activityCandidateId;
     },
     sort(activities) {
-        activities.sort((a, b) => (+b.group) - (+a.group) || a.name.localeCompare(b.name));
+        activities.sort((a, b) => (+b.group) - (+a.group) || a.name.localeCompare(b.name) || a.id.localeCompare(b.id));
     },
 }

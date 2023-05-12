@@ -21,18 +21,20 @@ export default {
         });
     },
     async create(activity) {
-        const {id, ...activityObject} = activity;
-        if (id) {
-            // just to skip the "Unused variable" warning
-            const newActivity = {...activityObject};
-            return axios.post(apiActivitiesUrl, {...newActivity}, {
-                headers: {
-                    Authorization: `Bearer ${apiToken}`,
-                },
-            }).then(response => {
-                return response.data;
-            });
+        const {name, group, parent_activity_id} = activity;
+        const newActivity = {
+            name,
+            group,
+            parent_activity_id,
         }
+
+        return axios.post(apiActivitiesUrl, newActivity, {
+            headers: {
+                Authorization: `Bearer ${apiToken}`,
+            },
+        }).then(response => {
+            return response.data;
+        });
     },
     async rename(activityId, name) {
         return axios.put(apiActivityUrl(activityId), {name}, {

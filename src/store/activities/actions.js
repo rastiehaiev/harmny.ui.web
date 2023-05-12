@@ -1,5 +1,6 @@
 import activitiesUtils from "@/utils/activities-utils";
 import activitiesService from "@/services/activities-service.js";
+import validationService from "@/services/validation-service";
 
 export default {
     applyFreshActivities(context, payload) {
@@ -54,36 +55,52 @@ export default {
             context.commit('removeActivityInEditMode');
         }
     },
-    commitActivityCreation(context) {
+    commitActivityInEditMode(context) {
         const activityInEditMode = context.getters.activityInEditMode;
-        if (activityInEditMode && activitiesUtils.isActivityCandidate(activityInEditMode.id)) {
-            activityInEditMode.operationInProgress = true;
-            console.log(`Creating new activity: ${activityInEditMode.name}.`);
-            return activitiesService.create(activityInEditMode)
-                .then((activity) => {
-                    context.commit('onActivityCreationSucceeded', activity.id);
-                    console.log(activity.id);
-                    return {activityId: activity.id};
-                })
-                .catch((error) => {
-                    activityInEditMode.operationInProgress = false;
-                    return {error};
-                });
-        }
-        return Promise.resolve();
-    },
-    commitActivityRenaming(context) {
-        const activityInEditMode = context.getters.activityInEditMode;
-        if (activityInEditMode && !activitiesUtils.isActivityCandidate(activityInEditMode.id)) {
-            activityInEditMode.operationInProgress = true;
-            return activitiesService.rename(activityInEditMode.id, activityInEditMode.name)
-                .then((activity) => {
-                    context.commit('onActivityRenamingSucceeded', activity);
-                    return {activityId: activity.id};
-                }).catch((error) => {
-                    activityInEditMode.operationInProgress = false;
-                    return {error};
-                });
+        if (activityInEditMode) {
+            const activities = context.getters.activities;
+            const activitiesMap = context.getters.activitiesMap;
+            const validationErrorCode = validationService.validateEditedActivity(activityInEditMode, activities, activitiesMap);
+            if (validationErrorCode) {
+                activityInEditMode.errorCode = validationErrorCode;
+                console.log(validationErrorCode);
+            } else {
+                activityInEditMode.operationInProgress = true;
+                if (activitiesUtils.isActivityCandidate(activityInEditMode.id)) {
+                    return activitiesService.create(activityInEditMode)
+                        .then((activity) => {
+                            context.commit('onActivityCreationSucceeded', activity.id);
+                            return {activityId: activity.id};
+                        })
+                        .catch((error) => {
+                            activityInEditMode.operationInProgress = false;
+                            const {failure} = error.response.data;
+                            let errorCode = 'unknown';
+                            if (failure) {
+                                const {type} = failure;
+                                errorCode = type;
+                            }
+                            activityInEditMode.errorCode = errorCode;
+                            return {errorCode};
+                        });
+                } else {
+                    return activitiesService.rename(activityInEditMode.id, activityInEditMode.name)
+                        .then((activity) => {
+                            context.commit('onActivityRenamingSucceeded', activity);
+                            return {activityId: activity.id};
+                        }).catch((error) => {
+                            activityInEditMode.operationInProgress = false;
+                            const {failure} = error.response.data;
+                            let errorCode = 'unknown';
+                            if (failure) {
+                                const {type} = failure;
+                                errorCode = type;
+                            }
+                            activityInEditMode.errorCode = errorCode;
+                            return {errorCode};
+                        });
+                }
+            }
         }
         return Promise.resolve();
     },
