@@ -85,6 +85,7 @@ export default {
             } else {
                 activityInEditMode.name = activityInEditMode.nameBackup;
                 activityInEditMode.nameBackup = undefined;
+                activityInEditMode.errorCode = undefined;
                 sortContainingGroup(activityInEditMode, state.activities, state.activitiesMap);
             }
             state.activityInEditMode = undefined;

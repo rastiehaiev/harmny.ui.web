@@ -1,13 +1,12 @@
 <template>
     <li class="hy-list-item"
-        :class="{'hy-list-item-error': !!errorCode}"
         :style="{ '--level': level, '--background-on-hover': backgroundOnHover, '--padding-left': paddingLeft, '--padding-right': paddingRight, '--list-item-height': height, '--cursor': cursor }">
         <hy-tooltip :message-code="errorCode" :is-error="!!errorCode">
             <template #target>
-                <router-link v-if="!!routeTo" :to="routeTo" class="hy-list-item__container">
+                <router-link v-if="!!routeTo" :to="routeTo" class="hy-list-item__container" :class="{'hy-list-item__container--error': !!errorCode}">
                     <slot name="content"></slot>
                 </router-link>
-                <div v-else class="hy-list-item__container">
+                <div v-else class="hy-list-item__container" :class="{'hy-list-item__container--error': !!errorCode}">
                     <slot name="content"></slot>
                 </div>
             </template>
@@ -87,19 +86,19 @@ export default {
     cursor: var(--cursor);
 }
 
-.hy-list-item__container:hover .hy-list-item-content .hy-list-item-content__left-icon-area i {
+.hy-list-item__container:hover:not(.hy-list-item__container--error) .hy-list-item-content .hy-list-item-content__left-icon-area i {
     color: var(--color-gray-3);
 }
 
-.hy-list-item.hy-list-item-error .hy-list-item__container {
+.hy-list-item__container.hy-list-item__container--error {
     background-color: var(--color-red-0);
 }
 
-.hy-list-item.hy-list-item-error .hy-list-item__container input {
+.hy-list-item__container.hy-list-item__container--error input {
     color: var(--color-red-2);
 }
 
-.hy-list-item.hy-list-item-error .hy-list-item__container .hy-list-item-content__left-icon-area i {
+.hy-list-item__container.hy-list-item__container--error .hy-list-item-content__left-icon-area i {
     color: var(--color-red-2);
 }
 

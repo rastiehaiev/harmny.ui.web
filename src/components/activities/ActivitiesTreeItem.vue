@@ -195,11 +195,11 @@ export default {
     opacity: 1;
 }
 
-.hy-list-item__container.router-link-active .hy-list-item-content .hy-list-item-content__left-icon-area i.activity_item__icon-activity {
+.hy-list-item__container.router-link-active:not(.hy-list-item__container--error) .hy-list-item-content .hy-list-item-content__left-icon-area i.activity_item__icon-activity {
     color: var(--color-magenta-1);
 }
 
-.hy-list-item__container.router-link-active .hy-list-item-content .hy-list-item-content__left-icon-area i.activity_item__icon-activity-group {
+.hy-list-item__container.router-link-active:not(.hy-list-item__container--error) .hy-list-item-content .hy-list-item-content__left-icon-area i.activity_item__icon-activity-group {
     color: var(--color-green-2);
 }
 
