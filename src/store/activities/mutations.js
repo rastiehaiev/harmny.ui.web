@@ -1,12 +1,6 @@
 import activitiesUtils from "@/utils/activities-utils.js";
 import validationService from "@/services/validation-service.js";
 
-function uuid() {
-    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
-}
-
 function sortContainingGroup(activity, activities, activitiesMap) {
     if (activity && activitiesMap) {
         let targetActivities = undefined;
@@ -123,6 +117,28 @@ export default {
         activitiesUtils.deleteById(activityId, state.activities);
         state.activitiesMap.delete(activityId);
     },
+    onActivityMoved(state, {activity, newParentActivityId}) {
+        let currentParent = undefined;
+        const currentParentActivityId = activity.parent_activity_id;
+        if (currentParentActivityId) {
+            currentParent = state.activitiesMap.get(currentParentActivityId);
+        }
+        let newParent = undefined;
+        if (newParentActivityId) {
+            newParent = state.activitiesMap.get(newParentActivityId);
+        }
+        if (currentParent) {
+            activitiesUtils.deleteById(activity.id, currentParent.child_activities)
+        }
+        if (newParent) {
+            if (!newParent.child_activities) {
+                newParent.child_activities = [activity];
+            } else {
+                newParent.child_activities.unshift(activity);
+                activitiesUtils.sort(newParent.child_activities);
+            }
+        }
+    },
     refreshEditedActivityPosition(state, newValue) {
         const activityInEditMode = state.activityInEditMode;
         if (activityInEditMode) {
@@ -163,5 +179,11 @@ export default {
             }
         }
         state.currentExpandLevel = currentExpandLevel;
+    },
+    enableDropZonesOnActivityMove(state, {activityId}) {
+        return activitiesUtils.enableDropZonesOnActivityMove(state.activitiesMap, state.activities, activityId);
+    },
+    disableAllDropZonesOnActivityMoveEnd(state) {
+        activitiesUtils.disableAllDropZonesOnActivityMoveEnd(state.activities)
     },
 };

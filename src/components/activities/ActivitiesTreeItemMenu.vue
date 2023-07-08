@@ -73,9 +73,3 @@ export default {
     },
 }
 </script>
-
-<style scoped>
-.activities-tree-item-menu-container .hy-list-item .hy-list-item__container {
-    height: 2rem;
-}
-</style>

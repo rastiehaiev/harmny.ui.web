@@ -120,4 +120,22 @@ export default {
             }
         }
     },
+    moveActivity(context, {activityId, newParentActivityId}) {
+        if (activityId) {
+            const activity = context.getters.activitiesMap.get(activityId);
+            if (activity) {
+                activity.operationInProgress = true;
+                return activitiesService.move(activity, newParentActivityId)
+                    .then(() => {
+                        context.commit('onActivityMoved', {activity, newParentActivityId});
+                        activity.parent_activity_id = newParentActivityId;
+                        activity.operationInProgress = false;
+                        return {activityId};
+                    }).catch((error) => {
+                        activity.operationInProgress = false;
+                        return {error};
+                    });
+            }
+        }
+    },
 };

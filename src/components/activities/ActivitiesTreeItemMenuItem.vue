@@ -1,14 +1,16 @@
 <template>
-    <hy-list-item padding-left="1rem" padding-right="0.6rem" height="2rem" cursor="pointer">
+    <hy-list-item padding-left="1rem" padding-right="0.6rem" cursor="pointer">
         <template #content>
-            <hy-list-item-content>
-                <template #left-icon>
-                    <slot name="left-icon"></slot>
-                </template>
-                <template #base-content>
-                    <slot name="base-content"></slot>
-                </template>
-            </hy-list-item-content>
+            <div class="activities-tree-item-menu-item">
+                <hy-list-item-content>
+                    <template #left-icon>
+                        <slot name="left-icon"></slot>
+                    </template>
+                    <template #base-content>
+                        <slot name="base-content"></slot>
+                    </template>
+                </hy-list-item-content>
+            </div>
         </template>
     </hy-list-item>
 </template>
@@ -22,3 +24,9 @@ export default {
     components: {HyListItemContent, HyListItem},
 }
 </script>
+
+<style scoped>
+.activities-tree-item-menu-item {
+    height: 2rem;
+}
+</style>

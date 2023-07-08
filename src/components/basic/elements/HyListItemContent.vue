@@ -1,13 +1,28 @@
 <template>
-    <div class="hy-list-item-content">
-        <div class="hy-list-item-content__left-icon-area">
-            <slot name="left-icon"></slot>
+    <router-link v-if="!!routeTo" :to="routeTo" class="hy-list-item__container" :class="{'hy-list-item__container--error': !!errorCode}">
+        <div class="hy-list-item-content">
+            <div class="hy-list-item-content__left-icon-area">
+                <slot name="left-icon"></slot>
+            </div>
+            <div class="hy-list-item-content__base-content-area">
+                <slot name="base-content"></slot>
+            </div>
+            <div class="hy-list-item-content__action-items-area">
+                <slot name="action-items"></slot>
+            </div>
         </div>
-        <div class="hy-list-item-content__base-content-area">
-            <slot name="base-content"></slot>
-        </div>
-        <div class="hy-list-item-content__action-items-area">
-            <slot name="action-items"></slot>
+    </router-link>
+    <div v-else class="hy-list-item__container" :class="{'hy-list-item__container--error': !!errorCode}">
+        <div class="hy-list-item-content">
+            <div class="hy-list-item-content__left-icon-area">
+                <slot name="left-icon"></slot>
+            </div>
+            <div class="hy-list-item-content__base-content-area">
+                <slot name="base-content"></slot>
+            </div>
+            <div class="hy-list-item-content__action-items-area">
+                <slot name="action-items"></slot>
+            </div>
         </div>
     </div>
 </template>
@@ -16,11 +31,58 @@
 export default {
     name: 'hy-list-item-content',
     props: {
+        routeTo: {
+            type: String,
+            default: undefined,
+        },
+        errorCode: {
+            type: String,
+        },
     },
 };
 </script>
 
 <style>
+
+a.hy-list-item__container {
+    text-decoration: none;
+    -webkit-user-drag: none;
+}
+
+.hy-list-item__container:hover {
+    background-color: var(--background-on-hover);
+}
+
+.hy-list-item__container.router-link-active {
+    background-color: var(--background-on-hover);
+}
+
+.hy-list-item__container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    padding-left: calc(var(--level, 0) * 0.7rem + var(--padding-left, 0));
+    padding-right: var(--padding-right, 0);
+    box-sizing: border-box;
+    cursor: var(--cursor);
+}
+
+.hy-list-item__container:hover:not(.hy-list-item__container--error) .hy-list-item-content .hy-list-item-content__left-icon-area i {
+    color: var(--color-gray-3);
+}
+
+.hy-list-item__container.hy-list-item__container--error {
+    background-color: var(--color-red-0);
+}
+
+.hy-list-item__container.hy-list-item__container--error input {
+    color: var(--color-red-2);
+}
+
+.hy-list-item__container.hy-list-item__container--error .hy-list-item-content__left-icon-area i {
+    color: var(--color-red-2);
+}
 
 .hy-list-item-content {
     display: flex;

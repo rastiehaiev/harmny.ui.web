@@ -45,6 +45,16 @@ export default {
             return response.data;
         });
     },
+    async move(activity, parentActivityId) {
+        const normalisedParentActivityId = parentActivityId ? parentActivityId : "root";
+        return axios.put(apiActivityUrl(activity.id), {parent_activity_id: normalisedParentActivityId}, {
+            headers: {
+                Authorization: `Bearer ${apiToken}`,
+            },
+        }).then(response => {
+            return response.data;
+        });
+    },
     async delete(activityId) {
         return axios.delete(apiActivityUrl(activityId), {
             headers: {

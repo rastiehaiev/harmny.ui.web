@@ -1,14 +1,14 @@
 <template>
     <div class="hy-tooltip-target" ref="tooltipTarget">
-        <slot name="target"></slot>
+        <slot></slot>
+        <Teleport to="#teleport-area" v-if="!!messageCode">
+            <div class="hy-tooltip-container"
+                 ref="tooltipContainer"
+                 :style="{'top': toPx(tooltipCoordinates.top), 'right': toPx(tooltipCoordinates.right), 'bottom': toPx(tooltipCoordinates.bottom), 'left': toPx(tooltipCoordinates.left), 'opacity': tooltipStyles.opacity, '--text-color': tooltipStyles.textColor, '--border-color': tooltipStyles.borderColor,}">
+                {{ resolveMessage() }}
+            </div>
+        </Teleport>
     </div>
-    <Teleport to="#teleport-area" v-if="!!messageCode">
-        <div class="hy-tooltip-container"
-             ref="tooltipContainer"
-             :style="{'top': toPx(tooltipCoordinates.top), 'right': toPx(tooltipCoordinates.right), 'bottom': toPx(tooltipCoordinates.bottom), 'left': toPx(tooltipCoordinates.left), 'opacity': tooltipStyles.opacity, '--text-color': tooltipStyles.textColor, '--border-color': tooltipStyles.borderColor,}">
-            {{ resolveMessage() }}
-        </div>
-    </Teleport>
 </template>
 
 <script>
@@ -119,6 +119,10 @@ export default {
 </script>
 
 <style scoped>
+.hy-tooltip-target {
+    height: 100%;
+}
+
 .hy-tooltip-container {
     position: absolute;
     opacity: 0;

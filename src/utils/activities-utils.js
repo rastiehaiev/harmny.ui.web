@@ -81,4 +81,30 @@ export default {
     sort(activities) {
         activities.sort((a, b) => (+b.group) - (+a.group) || a.name.localeCompare(b.name) || a.id.localeCompare(b.id));
     },
+    enableDropZonesOnActivityMove(activitiesMap, activities, activityId) {
+        if (!activities || !activities.length || activities.length === 0) {
+            return false;
+        }
+        let activityIdInCurrentGroup = false;
+        for (const activity of activities) {
+            if (activity.id === activityId) {
+                activityIdInCurrentGroup = true;
+            }
+            if (activity.group && activity.id !== activityId && !this.enableDropZonesOnActivityMove(activitiesMap, activity.child_activities, activityId)) {
+                activity.dropZoneEnabled = true;
+            }
+        }
+        return activityIdInCurrentGroup;
+    },
+    disableAllDropZonesOnActivityMoveEnd(activities) {
+        if (!activities || !activities.length || activities.length === 0) {
+            return false;
+        }
+        for (const activity of activities) {
+            if (activity.dropZoneEnabled) {
+                activity.dropZoneEnabled = undefined
+            }
+            this.disableAllDropZonesOnActivityMoveEnd(activity.child_activities)
+        }
+    },
 }
