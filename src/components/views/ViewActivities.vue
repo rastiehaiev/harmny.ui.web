@@ -1,16 +1,21 @@
 <template>
-    <div class="app-content__main">
-        <activities-tree-side-bar2></activities-tree-side-bar2>
-        <section class="activity-section"></section>
-    </div>
+    <app-side-bar></app-side-bar>
+    <app-bread-crumbs></app-bread-crumbs>
+    <section class="app-content">
+        <div class="app-content__main">
+            <activities-tree-side-bar></activities-tree-side-bar>
+            <section class="activity-section"></section>
+        </div>
+    </section>
+
 </template>
 
 <script>
-import ActivitiesTreeSideBar2 from "@/components/activities/ActivitiesTreeSideBar.vue";
+import ActivitiesTreeSideBar from "@/components/activities/ActivitiesTreeSideBar.vue";
 
 export default {
     components: {
-        ActivitiesTreeSideBar2,
+        ActivitiesTreeSideBar,
     },
     methods: {
         updateLastActivityId(route) {

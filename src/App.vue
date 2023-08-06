@@ -1,12 +1,10 @@
 <template>
-    <app-side-bar></app-side-bar>
-    <app-bread-crumbs></app-bread-crumbs>
-    <section class="app-content">
-        <router-view></router-view>
-    </section>
+    <router-view></router-view>
 </template>
 
 <script>
+import eventBus from "@/common/event-bus.js";
+
 function isMobileView() {
     const sideBarElem = document.getElementById('app-sidebar');
     if (sideBarElem) {
@@ -35,9 +33,15 @@ export default {
         this.$nextTick(() => {
             window.addEventListener('resize', this.onResize);
         })
+        eventBus.on("sign-out", () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh-token');
+            this.$router.push('/sign-in');
+        });
     },
     beforeUnmount() {
         window.removeEventListener('resize', this.onResize);
+        eventBus.remove("sign-out");
     },
 }
 </script>

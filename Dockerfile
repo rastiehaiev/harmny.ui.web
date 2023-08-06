@@ -5,9 +5,11 @@ WORKDIR /app
 # Copy all files from current directory to working dir in image
 COPY . .
 
+ARG MODE=production
+
 # install node modules and build assets
 RUN npm install
-RUN npm run build
+RUN npm run $MODE
 
 FROM nginx:alpine
 

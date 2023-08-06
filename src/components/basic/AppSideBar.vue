@@ -24,7 +24,7 @@
                     </router-link>
                 </li>
             </ul>
-            <a href="#" class="app-sidebar__link-profile"></a>
+            <a @click.prevent="signOut" href="#" class="app-sidebar__link-profile"></a>
         </nav>
     </aside>
 </template>
@@ -125,7 +125,14 @@
 }
 </style>
 <script>
+import eventBus from "@/common/event-bus";
+
 export default {
+    methods: {
+        signOut() {
+            eventBus.dispatch('sign-out');
+        }
+    },
     computed: {
         mobile() {
             return this.$store.getters['isMobileView'];

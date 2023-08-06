@@ -45,4 +45,20 @@ export default {
         }
         return undefined;
     },
+    validateEmail(email) {
+        if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            return 'fail.input.email.invalid';
+        }
+        return undefined;
+    },
+    validatePassword(password) {
+        if (password.length < 8) {
+            return 'fail.input.password.too.short';
+        } else if (password.length > 100) {
+            return 'fail.input.password.too.long';
+        } else if (!/^(?=.*[0-9])(?=.*[A-Za-z])(?=\S+$).{8,}$/.test(password)) {
+            return 'fail.input.password.invalid';
+        }
+        return undefined;
+    },
 }

@@ -2,7 +2,7 @@
     <ul class="activities-tree-item-menu-container">
         <activities-tree-item-menu-item v-if="activity.group && level < 2" @click.prevent="startActivityCreation(true, activity.id)">
             <template #left-icon>
-                <w-icon>mdi mdi-folder-plus-outline</w-icon>
+              <w-icon>mdi mdi-folder-plus-outline</w-icon>
             </template>
             <template #base-content>
                 <h3>Create activity group</h3>
