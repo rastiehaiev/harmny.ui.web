@@ -210,6 +210,7 @@ export default {
 .signin-socials-section__brand {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
 }
 
