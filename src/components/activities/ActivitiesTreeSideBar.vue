@@ -299,17 +299,19 @@ export default {
     font-size: 1rem;
     color: var(--color-gray-1);
     font-family: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .activities-tree-section {
     position: absolute;
-    width: 60%;
+    width: 100%;
     display: none;
     flex-direction: column;
     border-right: 1px solid #EAEAEA;
-    background-color: rgba(186, 224, 223, 0.09);
+    background-color: var(--color-side-list);
     height: calc(100% - 3.6rem - 4rem);
-    padding-bottom: 2.2rem;
 }
 
 @media only screen and (min-width: 50rem) {
@@ -318,6 +320,7 @@ export default {
         display: flex;
         height: 100%;
         width: 20rem;
+        padding-bottom: 1.6rem;
     }
 }
 
@@ -326,7 +329,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 0.4rem 0 1.2rem;
+    padding: 0 0.8rem 0 1.2rem;
     min-width: 9.6rem;
 }
 

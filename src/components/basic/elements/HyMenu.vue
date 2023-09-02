@@ -6,6 +6,7 @@
         <Teleport to="#teleport-area" v-if="menuDisplay">
             <OnClickOutside @trigger="closeMenu" :options="{ignore: [this.$refs.actuator]}">
                 <div class="hy-menu__menu-area"
+                     ref="menuArea"
                      @click="closeMenu"
                      :style="{'top': toPx(menuCoordTop), 'right': toPx(menuCoordRight), 'bottom': toPx(menuCoordBottom), 'left': toPx(menuCoordLeft)}">
                     <slot name="menu-area"></slot>
@@ -40,30 +41,36 @@ export default {
             menuCoordBottom: undefined,
             menuCoordLeft: undefined,
             menuDisplay: false,
+            menuOpacity: 0,
         }
     },
     methods: {
         closeMenu() {
             this.menuDisplay = false;
+            this.menuOpacity = 0;
         },
         toggleMenu() {
-            const display = !this.menuDisplay;
-            if (display) {
-                const actuatorCoordinates = this.$refs.actuator.getBoundingClientRect();
-                if (actuatorCoordinates.x !== this.actuatorCoordX || actuatorCoordinates.y !== this.actuatorCoordY) {
-                    this.actuatorCoordX = actuatorCoordinates.x;
-                    this.actuatorCoordY = actuatorCoordinates.y;
+            this.menuOpacity = 0;
+            this.menuDisplay = !this.menuDisplay;
+            if (this.menuDisplay) {
+                this.$nextTick(() => {
+                    const actuatorCoordinates = this.$refs.actuator.getBoundingClientRect();
+                    if (actuatorCoordinates.x !== this.actuatorCoordX || actuatorCoordinates.y !== this.actuatorCoordY) {
+                        this.actuatorCoordX = actuatorCoordinates.x;
+                        this.actuatorCoordY = actuatorCoordinates.y;
 
-                    const {top, right, bottom, left} = this.calculateMenuCoordinates(actuatorCoordinates);
-                    this.menuCoordTop = top;
-                    this.menuCoordRight = right;
-                    this.menuCoordBottom = bottom;
-                    this.menuCoordLeft = left;
-                }
+                        const menuAreaCoordinates = this.$refs.menuArea.getBoundingClientRect();
+                        const {top, right, bottom, left} = this.calculateMenuCoordinates(actuatorCoordinates, menuAreaCoordinates);
+                        this.menuCoordTop = top;
+                        this.menuCoordRight = right;
+                        this.menuCoordBottom = bottom;
+                        this.menuCoordLeft = left;
+                    }
+                });
+                this.menuOpacity = 100;
             }
-            this.menuDisplay = display;
         },
-        calculateMenuCoordinates(rect) {
+        calculateMenuCoordinates(actuatorRect, menuAreaRect) {
             let top = undefined;
             let right = undefined;
             let bottom = undefined;
@@ -71,21 +78,23 @@ export default {
 
             const viewportHeight = window.innerHeight;
             if (this.stickTo.startsWith("right")) {
-                left = rect.x + rect.width;
-                if (this.stickTo === 'right-top') {
-                    if (rect.bottom / viewportHeight > 0.8) {
-                        // will stick to bottom instead of top
-                        bottom = viewportHeight - rect.bottom;
-                    } else {
-                        top = rect.y;
-                    }
-                } else if (this.stickTo === 'right-bottom') {
-                    if (rect.top / viewportHeight < 0.1) {
-                        // will stick to top instead of bottom
-                        top = rect.y;
-                    } else {
-                        bottom = viewportHeight - rect.bottom;
-                    }
+                left = actuatorRect.x + actuatorRect.width;
+            } else if (this.stickTo.startsWith("left")) {
+                left = actuatorRect.left - menuAreaRect.width;
+            }
+            if (this.stickTo.endsWith('top')) {
+                if (actuatorRect.bottom / viewportHeight > 0.8) {
+                    // will stick to bottom instead of top
+                    bottom = viewportHeight - actuatorRect.bottom;
+                } else {
+                    top = actuatorRect.y;
+                }
+            } else if (this.stickTo.endsWith('bottom')) {
+                if (actuatorRect.top / viewportHeight < 0.1) {
+                    // will stick to top instead of bottom
+                    top = actuatorRect.y;
+                } else {
+                    bottom = viewportHeight - actuatorRect.bottom;
                 }
             }
             return {top, right, bottom, left};

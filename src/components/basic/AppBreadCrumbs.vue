@@ -104,6 +104,7 @@ export default {
     height: 3.6rem;
     width: 100%;
     border-bottom: 1px solid #EAEAEA;
+    z-index: 100;
 }
 
 .app-bread-crumbs__content {

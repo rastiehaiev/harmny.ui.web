@@ -5,45 +5,32 @@
 <script>
 import eventBus from "@/common/event-bus.js";
 
-function isMobileView() {
-    const sideBarElem = document.getElementById('app-sidebar');
-    if (sideBarElem) {
-        return getComputedStyle(sideBarElem).borderTopStyle !== 'none';
-    }
-    return false;
-}
-
 export default {
     methods: {
         onResize() {
-            let isMobile = isMobileView();
-            if (this.isMobileView !== isMobile) {
-                this.$store.commit('updateMobile', isMobile);
-            }
-        },
+            this.$store.commit("updateMobile");
+        }
     },
     computed: {
         isMobileView() {
             return this.$store.getters.mobile;
-        },
+        }
     },
     mounted() {
-        const mobileView = isMobileView();
-        this.$store.commit('updateMobile', mobileView);
         this.$nextTick(() => {
-            window.addEventListener('resize', this.onResize);
-        })
+            window.addEventListener("resize", this.onResize);
+        });
         eventBus.on("sign-out", () => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('refresh-token');
-            this.$router.push('/sign-in');
+            localStorage.removeItem("token");
+            localStorage.removeItem("refresh-token");
+            this.$router.push("/sign-in");
         });
     },
     beforeUnmount() {
-        window.removeEventListener('resize', this.onResize);
+        window.removeEventListener("resize", this.onResize);
         eventBus.remove("sign-out");
-    },
-}
+    }
+};
 </script>
 
 <style>
@@ -62,6 +49,8 @@ html {
     height: 100%;
     padding-top: 3.6rem;
     padding-bottom: 4rem;
+    position: fixed;
+    width: 100%;
 }
 
 @media only screen and (min-width: 50rem) {

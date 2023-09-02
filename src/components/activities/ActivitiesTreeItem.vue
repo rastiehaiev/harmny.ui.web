@@ -55,7 +55,7 @@
                                     mdi mdi-check-circle-outline
                                 </w-icon>
                             </div>
-                            <hy-menu v-else stick-to="right-top">
+                            <hy-menu v-else :stick-to="this.isMobileView ? 'left-top' : 'right-top'">
                                 <template #actuator>
                                     <div class="activity-tree-item__action-items-area activity-tree-item__action-items-area--options">
                                         <w-icon>mdi mdi-dots-horizontal</w-icon>
@@ -189,6 +189,9 @@ export default {
     computed: {
         activityInEditModeId() {
             return this.$store.getters['activities/activityInEditModeId'];
+        },
+        isMobileView() {
+            return this.$store.getters.isMobileView;
         },
     },
     watch: {

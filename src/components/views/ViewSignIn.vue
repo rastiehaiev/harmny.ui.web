@@ -149,7 +149,7 @@ export default {
 <style scoped>
 
 .signin-section {
-    background-color: rgba(15, 200, 231, 0.15);
+    background-color: var(--color-side-list);
     height: 100%;
     display: flex;
     justify-content: center;
@@ -158,6 +158,7 @@ export default {
 .signin-container {
     display: flex;
     flex-direction: column;
+    border: 1px solid var(--color-gray-1);
 }
 
 .signin-container h3 {

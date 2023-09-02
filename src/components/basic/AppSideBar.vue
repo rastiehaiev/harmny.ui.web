@@ -37,7 +37,7 @@
     height: 4rem;
     border-top: 1px solid #EAEAEA;
     justify-content: center;
-    z-index: 100;
+    z-index: 200;
     background-color: white;
 }
 
@@ -140,6 +140,9 @@ export default {
         currentPath() {
             return this.$route.path.split('/')[1];
         }
+    },
+    mounted() {
+        this.$store.commit("updateMobile");
     },
 }
 </script>
