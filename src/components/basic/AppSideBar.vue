@@ -143,6 +143,9 @@ export default {
     },
     mounted() {
         this.$store.commit("updateMobile");
+        this.$nextTick(() => {
+            this.$store.commit("updateMobile");
+        });
     },
 }
 </script>
