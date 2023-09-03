@@ -6,6 +6,8 @@ import ViewSignIn from "@/components/views/ViewSignIn.vue";
 import ViewSignUp from "@/components/views/ViewSignUp.vue";
 import ViewSignOut from "@/components/views/ViewSignOut.vue";
 
+import appStorage from "@/utils/app-storage";
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -71,7 +73,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     let authRequired = to.matched.some(value => value.meta.authRequired);
-    let token = localStorage.getItem("token");
+    let token = appStorage.getToken();
     if (authRequired && !token) {
         next("/sign-in");
     } else {

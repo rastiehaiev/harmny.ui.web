@@ -5,7 +5,7 @@
                 <li :class="{'app-sidebar__item': mobile, 'app-sidebar__item--logo': !mobile, 'app-sidebar__item--active': this.currentPath === '' }">
                     <router-link to="/" title="Home">
                         <w-icon v-if="mobile">mdi mdi-home-outline</w-icon>
-                        <icon-logo v-else/>
+                        <icon-logo v-else />
                     </router-link>
                 </li>
                 <li class="app-sidebar__item" :class="{'app-sidebar__item--active': this.currentPath === 'activities'}">
@@ -24,9 +24,15 @@
                     </router-link>
                 </li>
             </ul>
-            <a href="#"
+            <img v-if="!!userProfileUrl"
+                 :src="userProfileUrl"
+                 @click.prevent="signOut"
+                 class="app-sidebar__link-profile"
+                 alt="Profile image"
+                 referrerpolicy="no-referrer" />
+            <a v-else
+               href="#"
                @click.prevent="signOut"
-               :style="{'background-image': userProfileUrl}"
                class="app-sidebar__link-profile"></a>
         </nav>
     </aside>
@@ -113,6 +119,7 @@
 }
 
 .app-sidebar__link-profile {
+    cursor: pointer;
     width: 1.8rem;
     height: 1.8rem;
     background-size: 1.8rem 1.8rem;
@@ -133,31 +140,44 @@
 import eventBus from "@/common/event-bus";
 
 export default {
+    data() {
+        return {
+            userProfileUrl: undefined
+        };
+    },
     methods: {
         signOut() {
-            eventBus.dispatch('sign-out');
+            eventBus.dispatch("sign-out");
+        },
+        updateUserProfileUrl() {
+            const currentUser = this.$store.getters["getCurrentUser"];
+            if (currentUser) {
+                const { profile_photo_url: profilePhotoUrl } = currentUser;
+                if (profilePhotoUrl) {
+                    this.userProfileUrl = profilePhotoUrl;
+                }
+            }
         }
     },
     computed: {
         mobile() {
-            return this.$store.getters['isMobileView'];
+            return this.$store.getters["isMobileView"];
         },
         currentPath() {
-            return this.$route.path.split('/')[1];
-        },
-        userProfileUrl() {
-            const currentUser = this.$store.getters["getCurrentUser"];
-            if (currentUser && currentUser.profile_photo_url) {
-                return `url(${currentUser.profile_photo_url})`;
-            }
-            return undefined;
-        },
+            return this.$route.path.split("/")[1];
+        }
+    },
+    watch: {
+        "$store.state.currentUser": function() {
+            this.updateUserProfileUrl();
+        }
     },
     mounted() {
+        this.updateUserProfileUrl();
         this.$store.commit("updateMobile");
         this.$nextTick(() => {
             this.$store.commit("updateMobile");
         });
-    },
-}
+    }
+};
 </script>

@@ -1,9 +1,10 @@
 import eventBus from "@/common/event-bus";
+import appStorage from "@/utils/app-storage";
 
 const setup = (client, serviceUserClient) => {
     client.interceptors.request.use(
         (config) => {
-            const token = localStorage.getItem("token");
+            const token = appStorage.getToken();
             if (token) {
                 config.headers["Authorization"] = "Bearer " + token;
             }
@@ -24,7 +25,7 @@ const setup = (client, serviceUserClient) => {
                 const status = err.response.status;
                 if (status === 401 && !originalConfig._retry) {
                     try {
-                        const currentRefreshToken = localStorage.getItem("refresh-token");
+                        const currentRefreshToken = appStorage.getRefreshToken();
                         if (currentRefreshToken) {
                             const refreshTokenResponse = await serviceUserClient.post("/auth/refresh-token", {
                                 token: currentRefreshToken
@@ -32,8 +33,8 @@ const setup = (client, serviceUserClient) => {
                             const { token, refresh_token: refreshToken } = refreshTokenResponse.data;
                             if (token && refreshToken) {
                                 originalConfig._retry = true;
-                                localStorage.setItem("token", token);
-                                localStorage.setItem("refresh-token", refreshToken);
+                                appStorage.setToken(token);
+                                appStorage.setRefreshToken(refreshToken);
                                 return client(originalConfig);
                             }
                             eventBus.dispatch("sign-out");

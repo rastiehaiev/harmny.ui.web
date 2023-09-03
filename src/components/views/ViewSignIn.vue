@@ -73,6 +73,7 @@ import authService from "@/services/auth-service.js";
 import validationService from "@/services/validation-service.js";
 import configProvider from "@/utils/config-provider.js";
 import messageResolver from "@/utils/message-resolver";
+import appStorage from "@/utils/app-storage";
 
 export default {
     components: {IconLogo, HyInput, HyInputSubmit},
@@ -97,10 +98,10 @@ export default {
                            .then(tokenResponse => {
                                const {token, 'refresh-token': refreshToken} = tokenResponse;
                                if (token) {
-                                   localStorage.setItem('token', token);
+                                   appStorage.setToken(token);
                                }
                                if (refreshToken) {
-                                   localStorage.setItem('refresh-token', refreshToken);
+                                   appStorage.setRefreshToken(refreshToken);
                                }
                                this.inputsDisabled = false;
                            })
@@ -135,11 +136,11 @@ export default {
     mounted() {
         const refreshToken = this.$route.query['refresh-token'];
         if (refreshToken) {
-            localStorage.setItem('refresh-token', refreshToken);
+            appStorage.setRefreshToken(refreshToken);
         }
         const token = this.$route.query.token;
         if (token) {
-            localStorage.setItem('token', token);
+            appStorage.setToken(token);
             this.$router.push({path: '/'})
         }
     },

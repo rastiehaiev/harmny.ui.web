@@ -4,6 +4,7 @@
 
 <script>
 import eventBus from "@/common/event-bus.js";
+import appStorage from "@/utils/app-storage";
 
 export default {
     methods: {
@@ -21,17 +22,21 @@ export default {
             window.addEventListener("resize", this.onResize);
         });
         eventBus.on("sign-out", () => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("refresh-token");
+            appStorage.removeToken();
+            appStorage.removeRefreshToken();
             this.$router.push("/sign-in");
         });
-    },
-    beforeCreate() {
-        this.$store.commit("fetchCurrentUser");
+        eventBus.on("token-set", () => {
+            this.$store.commit("fetchCurrentUser");
+        });
+        if (appStorage.getToken()) {
+            this.$store.commit("fetchCurrentUser");
+        }
     },
     beforeUnmount() {
         window.removeEventListener("resize", this.onResize);
         eventBus.remove("sign-out");
+        eventBus.remove("token-set");
     }
 };
 </script>

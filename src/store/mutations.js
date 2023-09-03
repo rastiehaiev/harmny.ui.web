@@ -21,13 +21,11 @@ export default {
         state.lastActivityId = lastActivityId;
     },
     fetchCurrentUser(state) {
-        if (localStorage.getItem('token')) {
-            serviceUserClient.get("/users/me").then(response => {
-                state.currentUser = response.data;
-            }).catch(error => {
-                console.log('Failed to fetch user.');
-                console.log(error);
-            });
-        }
+        serviceUserClient.get("/users/me").then(response => {
+            state.currentUser = response.data;
+        }).catch(error => {
+            console.log('Failed to fetch user.');
+            console.log(error);
+        });
     },
 };
