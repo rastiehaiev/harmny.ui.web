@@ -11,11 +11,23 @@ function isMobileView() {
     return false;
 }
 
+import serviceUserClient from "@/clients/service-user-client";
+
 export default {
     updateMobile(state) {
         state.mobile = isMobileView();
     },
     updateLastActivityId(state, lastActivityId) {
         state.lastActivityId = lastActivityId;
-    }
+    },
+    fetchCurrentUser(state) {
+        if (localStorage.getItem('token')) {
+            serviceUserClient.get("/users/me").then(response => {
+                state.currentUser = response.data;
+            }).catch(error => {
+                console.log('Failed to fetch user.');
+                console.log(error);
+            });
+        }
+    },
 };

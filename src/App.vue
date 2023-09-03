@@ -26,6 +26,9 @@ export default {
             this.$router.push("/sign-in");
         });
     },
+    beforeCreate() {
+        this.$store.commit("fetchCurrentUser");
+    },
     beforeUnmount() {
         window.removeEventListener("resize", this.onResize);
         eventBus.remove("sign-out");

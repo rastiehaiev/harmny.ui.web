@@ -9,6 +9,7 @@ const store = createStore({
     state: {
         mobile: false,
         lastActivityId: undefined,
+        currentUser: undefined,
     },
     mutations,
     getters,

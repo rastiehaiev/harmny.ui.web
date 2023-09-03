@@ -24,7 +24,10 @@
                     </router-link>
                 </li>
             </ul>
-            <a @click.prevent="signOut" href="#" class="app-sidebar__link-profile"></a>
+            <a href="#"
+               @click.prevent="signOut"
+               :style="{'background-image': userProfileUrl}"
+               class="app-sidebar__link-profile"></a>
         </nav>
     </aside>
 </template>
@@ -112,6 +115,8 @@
 .app-sidebar__link-profile {
     width: 1.8rem;
     height: 1.8rem;
+    background-size: 1.8rem 1.8rem;
+    background-position: center;
     border-radius: 1.8rem;
     border: 1px solid #909090;
 }
@@ -139,7 +144,14 @@ export default {
         },
         currentPath() {
             return this.$route.path.split('/')[1];
-        }
+        },
+        userProfileUrl() {
+            const currentUser = this.$store.getters["getCurrentUser"];
+            if (currentUser && currentUser.profile_photo_url) {
+                return `url(${currentUser.profile_photo_url})`;
+            }
+            return undefined;
+        },
     },
     mounted() {
         this.$store.commit("updateMobile");
