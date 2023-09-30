@@ -1,5 +1,5 @@
 export default {
-    activityToBeDeleted(state) {
-        return state.activityToBeDeleted;
-    },
-};
+  activityToBeDeleted(state) {
+    return state.activityToBeDeleted
+  },
+}

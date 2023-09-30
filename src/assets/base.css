@@ -1,82 +1,165 @@
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, menu, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-main, menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+menu,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-html, body, #app {
-    height: 100%;
+html,
+body,
+#app {
+  height: 100%;
+  font-family: var(--font-family);
 }
 
-h1, h2, h3, h4 {
-    font-weight: 300;
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 300;
 }
 
-menu, ol, ul {
-    list-style: none;
+menu,
+ol,
+ul {
+  list-style: none;
 }
+
 :root {
-    --color-gray-0: #EAEAEA;
-    --color-gray-1: #ACABAB;
-    --color-gray-2: #909090;
-    --color-gray-3: #606060;
-    --color-gray-4: #444343;
-    --color-green-1: rgba(30,115,7,0.66);
-    --color-green-2: #1a6207;
-    --color-red-0: #fff1f1;
-    --color-red-1: rgba(255,0,0,0.66);
-    --color-red-2: red;
-    --color-red-3: #d00000;
-    --color-magenta-1: #B243C5;
-    --color-link: #147c98;
-    --color-link-hover: #279b91;
-    --color-side-list: rgba(186, 224, 223, 0.09);
-    --color-side-list-hover: #0FC8E714;
+  --color-gray-0: #eaeaea;
+  --color-gray-1: #acabab;
+  --color-gray-2: #909090;
+  --color-gray-3: #606060;
+  --color-gray-4: #444343;
+  --color-green-0: rgb(133, 197, 117);
+  --color-green-1: rgba(30, 115, 7, 0.66);
+  --color-green-2: #1a6207;
+  --color-red-0: #fff1f1;
+  --color-red-1: rgba(255, 0, 0, 0.66);
+  --color-red-2: red;
+  --color-red-3: #d00000;
+  --color-magenta-1: #b243c5;
+  --color-link: #147c98;
+  --color-link-hover: #279b91;
+  --color-side-list: rgb(248, 254, 255);
+  --color-side-list-hover: #0fc8e714;
 }
-
 
 #app {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .app-content__main {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
 }
 
 .w-tooltip {
-    font-size: 0.8rem;
+  font-size: 0.8rem;
 }
 
 .height-a {
-    height: 2.2rem;
+  height: 2.2rem;
 }
 
 .icon-size-a {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 
 .icon-size-b {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
 .color-ok {
-    color: var(--color-green-1);
+  color: var(--color-green-1);
 }
 
 .color-cancel {
-    color: var(--color-red-1);
+  color: var(--color-red-1);
+}
+
+input {
+  font-weight: 300;
 }

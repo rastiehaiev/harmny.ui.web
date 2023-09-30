@@ -1,8 +1,5 @@
 <template>
-    <div>
-        Sign out
-    </div>
+  <div>Sign out</div>
 </template>
 
-<script>
-</script>
+<script></script>

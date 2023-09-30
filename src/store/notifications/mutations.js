@@ -1,5 +1,5 @@
 export default {
-    setActivityToBeDeleted(state, activity) {
-        state.activityToBeDeleted = activity;
-    },
-};
+  setActivityToBeDeleted(state, activity) {
+    state.activityToBeDeleted = activity
+  },
+}

@@ -1,18 +1,23 @@
 <template>
   <input
-      :disabled="disable"
-      :type="inputType"
-      :placeholder="inputPlaceholder"
-      :style="{ '--hy-font-size': fontSize, '--hy-font-weight': fontWeight, '--hy-border-color': (errorCode ? 'var(--color-red-3)' : 'var(--color-gray-1)'), '--hy-border-color-focus': (errorCode ? 'var(--color-red-3)' : 'var(--color-link)') }"
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
-      @blur="$emit('validate', modelValue)"
+    :disabled="disable"
+    :type="inputType"
+    :placeholder="inputPlaceholder"
+    :style="{
+      '--hy-font-size': fontSize,
+      '--hy-font-weight': fontWeight,
+      '--hy-border-color': errorCode ? 'var(--color-red-3)' : 'var(--color-gray-1)',
+      '--hy-border-color-focus': errorCode ? 'var(--color-red-3)' : 'var(--color-link)',
+    }"
+    :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
+    @blur="$emit('validate', modelValue)"
   />
   <h5 v-if="errorCode">{{ resolveMessage() }}</h5>
 </template>
 
 <script>
-import messageResolver from "@/utils/message-resolver";
+import messageResolver from '@/utils/message-resolver'
 
 export default {
   emits: ['update:modelValue', 'validate'],
@@ -46,17 +51,17 @@ export default {
   data() {
     return {
       inputValue: '',
-    };
+    }
   },
   methods: {
     resolveMessage() {
       if (!this.errorCode) {
-        return undefined;
+        return undefined
       }
-      return messageResolver.resolveByCode(this.errorCode);
+      return messageResolver.resolveByCode(this.errorCode)
     },
   },
-};
+}
 </script>
 
 <style scoped>

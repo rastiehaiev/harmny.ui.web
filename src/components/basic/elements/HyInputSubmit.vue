@@ -1,12 +1,20 @@
 <template>
   <input
-      type="submit"
-      :value="value"
-      :style="{ '--hy-font-size': fontSize, '--hy-font-weight': fontWeight, '--hy-bg-color': backgroundColor, '--hy-bg-color-focus': backgroundColorFocus, '--hy-bg-color-active': backgroundColorActive }"/>
+    type="submit"
+    :value="value"
+    :style="{
+      '--hy-font-size': fontSize,
+      '--hy-font-weight': fontWeight,
+      '--hy-bg-color': backgroundColor,
+      '--hy-bg-color-focus': backgroundColorFocus,
+      '--hy-bg-color-active': backgroundColorActive,
+    }"
+  />
 </template>
 
 <script>
-import buttonThemes from '@/themes/button-themes.js';
+import buttonThemes from '@/themes/button-themes.js'
+
 export default {
   props: {
     value: {
@@ -27,9 +35,9 @@ export default {
     },
   },
   data() {
-    let themeConfig = buttonThemes[this.theme];
+    let themeConfig = buttonThemes[this.theme]
     if (!themeConfig) {
-      themeConfig = buttonThemes.orange1;
+      themeConfig = buttonThemes.orange1
     }
     return {
       backgroundColor: themeConfig.backgroundColor,
@@ -37,7 +45,7 @@ export default {
       backgroundColorActive: themeConfig.backgroundColorActive,
     }
   },
-};
+}
 </script>
 
 <style scoped>
@@ -81,6 +89,6 @@ input:focus {
 
 input:active {
   background-color: var(--hy-bg-color-active);
-  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
 }
 </style>
