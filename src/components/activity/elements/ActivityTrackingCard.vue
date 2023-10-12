@@ -3,11 +3,12 @@
     <div class="activity-tracking-card__sections-group">
       <section class="activity-tracking-card__section">
         <section class="activity-tracking-card__section-row">
-          <label for="activity-tracking-card__duration">Duration</label>
+          <label for="dp-input-activity-tracking-card__duration">Duration</label>
           <div class="activity-tracking-card__section-row--item">
             <HyDateTimePicker
               v-model="duration"
               id="activity-tracking-card__duration"
+              uid="activity-tracking-card__duration"
               :disabled="timerOn"
               time-only
               enable-seconds
@@ -19,11 +20,12 @@
           </div>
         </section>
         <section class="activity-tracking-card__section-row">
-          <label for="activity-tracking-card__started_at">Started at</label>
+          <label for="dp-input-activity-tracking-card__started_at">Started at</label>
           <div class="activity-tracking-card__section-row--item">
             <HyDateTimePicker
               v-model="startedAt"
               id="activity-tracking-card__started_at"
+              uid="activity-tracking-card__started_at"
               :disabled="timerOn"
             />
           </div>

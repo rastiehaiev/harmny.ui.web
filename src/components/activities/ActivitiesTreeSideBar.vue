@@ -109,6 +109,8 @@ import HyButton from '@/components/basic/elements/HyButton.vue'
 import ActivitiesTree from '@/components/activities/ActivitiesTree.vue'
 import activitiesService from '@/services/activities-service'
 
+import eventBus from '@/common/event-bus'
+
 function expandVertical(activity) {
   if (
     activity.group &&
@@ -308,8 +310,12 @@ export default {
   },
   mounted() {
     this.refreshActivities()
+    eventBus.on('close-activities-tree-sidebar', () => {
+      this.collapseHorizontally()
+    })
   },
   beforeUnmount() {
+    eventBus.remove('close-activities-tree-sidebar')
     this.$store.commit('activities/removeActivityInEditMode')
   },
 }
@@ -360,6 +366,7 @@ export default {
 
 .activities-tree-section {
   position: absolute;
+  flex-shrink: 0;
   width: 100%;
   display: none;
   flex-direction: column;

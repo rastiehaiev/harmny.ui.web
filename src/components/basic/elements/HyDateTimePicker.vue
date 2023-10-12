@@ -1,6 +1,7 @@
 <template>
   <VueDatePicker
     v-model="date"
+    :uid="uid"
     :teleport="true"
     :time-picker="timeOnly"
     :hide-input-icon="true"
@@ -37,6 +38,9 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    uid: {
+      type: String,
     },
   },
   emits: ['onDateTimeChanged'],

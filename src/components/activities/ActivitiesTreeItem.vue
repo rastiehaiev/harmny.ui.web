@@ -20,7 +20,11 @@
         @[activity.dropZoneEnabled&&`dragenter`].prevent="true"
       >
         <hy-tooltip :message-code="activity.errorCode" :is-error="!!activity.errorCode">
-          <hy-list-item-content :error-code="activity.errorCode" :route-to="routeTo(activity.id)">
+          <hy-list-item-content
+            :error-code="activity.errorCode"
+            :route-to="routeTo(activity.id)"
+            @on-link-clicked="closeActivityTreeInMobile()"
+          >
             <template #left-icon>
               <w-icon
                 spin
@@ -137,6 +141,8 @@ import HyListItemContent from '@/components/basic/elements/HyListItemContent.vue
 import ActivitiesTreeItemMenu from '@/components/activities/ActivitiesTreeItemMenu.vue'
 import HyTooltip from '@/components/basic/elements/HyTooltip.vue'
 
+import eventBus from '@/common/event-bus'
+
 export default {
   name: 'activities-tree-item',
   components: { HyTooltip, ActivitiesTreeItemMenu, HyMenu, HyListItemContent, HyListItem },
@@ -158,6 +164,11 @@ export default {
     },
   },
   methods: {
+    closeActivityTreeInMobile() {
+      if (this.isMobileView) {
+        eventBus.dispatch('close-activities-tree-sidebar')
+      }
+    },
     routeTo(activityId) {
       return !activitiesUtils.isActivityCandidate(activityId)
         ? `/activities/${activityId}`
@@ -283,25 +294,25 @@ export default {
 }
 
 .activities-tree__items
-  .hy-list-item__container:active
-  .activity-tree-item__action-items-area--options,
+.hy-list-item__container:active
+.activity-tree-item__action-items-area--options,
 .activities-tree__items
-  .hy-list-item__container:hover
-  .activity-tree-item__action-items-area--options {
+.hy-list-item__container:hover
+.activity-tree-item__action-items-area--options {
   opacity: 1;
 }
 
 .hy-list-item__container.router-link-active:not(.hy-list-item__container--error)
-  .hy-list-item-content
-  .hy-list-item-content__left-icon-area
-  i.activity_item__icon-activity {
+.hy-list-item-content
+.hy-list-item-content__left-icon-area
+i.activity_item__icon-activity {
   color: var(--color-magenta-1);
 }
 
 .hy-list-item__container.router-link-active:not(.hy-list-item__container--error)
-  .hy-list-item-content
-  .hy-list-item-content__left-icon-area
-  i.activity_item__icon-activity-group {
+.hy-list-item-content
+.hy-list-item-content__left-icon-area
+i.activity_item__icon-activity-group {
   color: var(--color-green-2);
 }
 

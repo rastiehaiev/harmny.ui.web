@@ -57,10 +57,12 @@ import HyTabs from '@/components/basic/elements/tabs/HyTabs.vue'
 import HyTabsItem from '@/components/basic/elements/tabs/HyTabsItem.vue'
 import HyMenuButton from '@/components/basic/elements/HyMenuButton.vue'
 import HyDialog from '@/components/basic/elements/HyDialog.vue'
+import NotImplementedView from '@/components/basic/NotImplementedView.vue'
 
 export default {
   props: ['currentActivity'],
   components: {
+    NotImplementedView,
     ActivityTrackingCard,
     ActivitySectionContent,
     HyTabs,

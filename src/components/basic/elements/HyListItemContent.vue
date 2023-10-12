@@ -9,7 +9,7 @@
       <div class="hy-list-item-content__left-icon-area">
         <slot name="left-icon"></slot>
       </div>
-      <div class="hy-list-item-content__base-content-area">
+      <div class="hy-list-item-content__base-content-area" @dblclick="onClick()">
         <slot name="base-content"></slot>
       </div>
       <div class="hy-list-item-content__action-items-area">
@@ -39,6 +39,7 @@
 <script>
 export default {
   name: 'hy-list-item-content',
+  emits: ['onLinkClicked'],
   props: {
     routeTo: {
       type: String,
@@ -46,6 +47,13 @@ export default {
     },
     errorCode: {
       type: String,
+    },
+  },
+  methods: {
+    onClick() {
+      if (this.$props.routeTo) {
+        this.$emit('onLinkClicked')
+      }
     },
   },
 }

@@ -61,7 +61,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--color-gray-0);
-  padding: 0.6rem 1rem 0.6rem 1.6rem;
+  padding: 0.8rem 1rem 0.8rem 1.6rem;
   gap: 1.5rem;
 }
 
