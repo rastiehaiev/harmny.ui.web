@@ -168,6 +168,9 @@ export default {
   async pauseActivityRepetition(context, { activityId, repetitionId }) {
     return await activitiesService.pauseRepetition(activityId, repetitionId)
   },
+  async deleteActivityRepetition(context, { activityId, repetitionId }) {
+    return await activitiesService.deleteRepetition(activityId, repetitionId)
+  },
   async updateActivityRepetition(context, { activityId, repetitionId, repetition }) {
     return await activitiesService.upsertRepetition(activityId, repetitionId, repetition)
   },
@@ -176,6 +179,10 @@ export default {
       completed: true,
       ...repetition,
     }
-    return await activitiesService.upsertRepetition(activityId, repetitionId, updateRepetitionRequest)
+    return await activitiesService.upsertRepetition(
+      activityId,
+      repetitionId,
+      updateRepetitionRequest,
+    )
   },
 }

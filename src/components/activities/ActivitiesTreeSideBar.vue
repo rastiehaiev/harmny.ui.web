@@ -1,4 +1,11 @@
 <template>
+  <div
+    @click="expandHorizontally"
+    class="activities-tree__mobile_burger"
+    :style="{ display: activitiesTreeBurgerCollapseViewDisplay }"
+  >
+    <w-icon>mdi mdi-menu</w-icon>
+  </div>
   <aside
     class="activities-tree__collapsed-view"
     @click="expandHorizontally"
@@ -6,7 +13,7 @@
   >
     <div class="activities-tree__collapsed-view--wrapper">
       <h3 class="activities-tree__header">Activities Tree</h3>
-      <w-icon> mdi mdi-page-first</w-icon>
+      <w-icon>mdi mdi-page-first</w-icon>
     </div>
   </aside>
   <section class="activities-tree-section" :style="{ display: activitiesTreeSectionDisplay }">
@@ -89,8 +96,8 @@
           </template>
         </section>
         <section class="activities-tree-section__delete-activity-dialog-container--action-items">
-          <hy-button @click="cancelActivityDeletion">Cancel</hy-button>
-          <hy-button button-style="red" @click="confirmActivityDeletion">Delete</hy-button>
+          <HyButton @click="cancelActivityDeletion" text="Cancel" />
+          <HyButton theme="red" @click="confirmActivityDeletion" text="Delete" />
         </section>
       </div>
     </w-dialog>
@@ -150,29 +157,35 @@ const activitiesTreeConfig = {
   // mobile view
   true: {
     expanded: {
+      activitiesTreeBurgerCollapseViewDisplay: 'none',
       activitiesTreeCollapseViewDisplay: 'none',
       activitiesTreeSectionDisplay: 'flex',
     },
     collapsed: {
-      activitiesTreeCollapseViewDisplay: 'block',
+      activitiesTreeBurgerCollapseViewDisplay: 'flex',
+      activitiesTreeCollapseViewDisplay: 'none',
       activitiesTreeSectionDisplay: 'none',
     },
     default: {
-      activitiesTreeCollapseViewDisplay: 'block',
+      activitiesTreeBurgerCollapseViewDisplay: 'flex',
+      activitiesTreeCollapseViewDisplay: 'none',
       activitiesTreeSectionDisplay: 'none',
     },
   },
   // desktop view
   false: {
     expanded: {
+      activitiesTreeBurgerCollapseViewDisplay: 'none',
       activitiesTreeCollapseViewDisplay: 'none',
       activitiesTreeSectionDisplay: 'flex',
     },
     collapsed: {
+      activitiesTreeBurgerCollapseViewDisplay: 'none',
       activitiesTreeCollapseViewDisplay: 'block',
       activitiesTreeSectionDisplay: 'none',
     },
     default: {
+      activitiesTreeBurgerCollapseViewDisplay: 'none',
       activitiesTreeCollapseViewDisplay: 'none',
       activitiesTreeSectionDisplay: 'flex',
     },
@@ -185,6 +198,7 @@ export default {
   data() {
     return {
       showDeleteActivityDialog: false,
+      activitiesTreeBurgerCollapseViewDisplay: undefined,
       activitiesTreeCollapseViewDisplay: undefined,
       activitiesTreeSectionDisplay: undefined,
     }
@@ -240,16 +254,22 @@ export default {
     },
     expandHorizontally() {
       const displayConfig = activitiesTreeConfig[this.isMobileView].expanded
+      this.activitiesTreeBurgerCollapseViewDisplay =
+        displayConfig.activitiesTreeBurgerCollapseViewDisplay
       this.activitiesTreeCollapseViewDisplay = displayConfig.activitiesTreeCollapseViewDisplay
       this.activitiesTreeSectionDisplay = displayConfig.activitiesTreeSectionDisplay
     },
     collapseHorizontally() {
       const displayConfig = activitiesTreeConfig[this.isMobileView].collapsed
+      this.activitiesTreeBurgerCollapseViewDisplay =
+        displayConfig.activitiesTreeBurgerCollapseViewDisplay
       this.activitiesTreeCollapseViewDisplay = displayConfig.activitiesTreeCollapseViewDisplay
       this.activitiesTreeSectionDisplay = displayConfig.activitiesTreeSectionDisplay
     },
     setDisplayProperties() {
       const displayConfig = activitiesTreeConfig[this.isMobileView].default
+      this.activitiesTreeBurgerCollapseViewDisplay =
+        displayConfig.activitiesTreeBurgerCollapseViewDisplay
       this.activitiesTreeSectionDisplay = displayConfig.activitiesTreeSectionDisplay
       this.activitiesTreeCollapseViewDisplay = displayConfig.activitiesTreeCollapseViewDisplay
     },
@@ -422,12 +442,28 @@ export default {
   display: flex;
   gap: 0.8rem;
   justify-content: end;
+  height: 2rem;
 }
 
 .activities-tree__action-items--animated-create-folder-icon {
   animation-name: animate-create-folder-icon;
   animation-duration: 3s;
   animation-iteration-count: 20;
+}
+
+.activities-tree__mobile_burger {
+  position: absolute;
+  top: 45%;
+  display: flex;
+  align-items: center;
+  width: 2rem;
+  height: 4rem;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 350;
+  border-radius: 0 4rem 4rem 0;
+  background-color: var(--theme-green-color-3);
+  cursor: pointer;
 }
 
 @keyframes animate-create-folder-icon {

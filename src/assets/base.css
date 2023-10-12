@@ -124,6 +124,19 @@ ul {
   --color-link-hover: #279b91;
   --color-side-list: rgb(248, 254, 255);
   --color-side-list-hover: #0fc8e714;
+  --theme-green-color-1: rgb(237, 248, 239);
+  --theme-green-color-2: rgb(219, 241, 223);
+  --theme-green-color-3: rgb(210, 238, 215);
+  --theme-green-color-4: rgb(77, 187, 95);
+  --theme-orange-color-1: rgb(255, 238, 185);
+  --theme-orange-color-2: rgb(252, 231, 167);
+  --theme-orange-color-3: rgb(253, 228, 153);
+  --theme-orange-color-4: rgb(213, 128, 0);
+  --theme-red-color-1: rgb(255, 219, 206);
+  --theme-red-color-2: rgb(253, 202, 181);
+  --theme-red-color-3: rgb(253, 193, 167);
+  --theme-red-color-4: rgb(213, 32, 0);
+  --font-family: Inter, Helvetica, monospace;
 }
 
 #app {
@@ -158,6 +171,18 @@ ul {
 
 .color-cancel {
   color: var(--color-red-1);
+}
+
+a.link__default {
+  color: var(--color-link);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+a.link__default:hover,
+a.link__default:active {
+  color: var(--color-link-hover);
 }
 
 input {

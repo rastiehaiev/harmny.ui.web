@@ -3,15 +3,19 @@
     v-model="date"
     :teleport="true"
     :time-picker="timeOnly"
-    :hide-input-icon="timeOnly"
+    :hide-input-icon="true"
     :enable-seconds="enableSeconds"
     :min-date="minDate()"
     :max-date="maxDate()"
+    :disabled="disabled"
     :action-row="{ showNow: !timeOnly }"
     utc
     prevent-min-max-navigation
     input-class-name="date-picker-input"
-    :style="{ '--dp-font-family': 'Inter, Helvetica, monospace' }"
+    :style="{
+      '--dp-font-family': 'Inter, Helvetica, monospace',
+      '--dp-border-color': 'var(--color-gray-1)',
+    }"
   ></VueDatePicker>
 </template>
 
@@ -27,6 +31,10 @@ export default {
       default: false,
     },
     enableSeconds: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
       type: Boolean,
       default: false,
     },
@@ -62,9 +70,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.date-picker-input {
-  max-width: 13rem;
-}
-</style>

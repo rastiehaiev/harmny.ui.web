@@ -42,24 +42,8 @@ clientInterceptor(apiClient, serviceUserClient)
 clientInterceptor(serviceUserClient, serviceUserClient)
 
 app.component(
-  'activities-dashboard',
-  defineAsyncComponent(() =>
-    import('@/components/activities/activity/items/ActivitiesDashboard.vue'),
-  ),
-)
-app.component(
-  'activity-group-summary',
-  defineAsyncComponent(() =>
-    import('@/components/activities/activity/items/ActivityGroupSummary.vue'),
-  ),
-)
-app.component(
-  'activity-summary',
-  defineAsyncComponent(() => import('@/components/activities/activity/items/ActivitySummary.vue')),
-)
-app.component(
-  'activity-details',
-  defineAsyncComponent(() => import('@/components/activities/activity/items/ActivityDetails.vue')),
+  'activity-view',
+  defineAsyncComponent(() => import('@/components/activity/ActivityDetailsArea.vue')),
 )
 
 app.mount('#app')

@@ -4,18 +4,18 @@
   <section class="app-content">
     <div class="app-content__main">
       <activities-tree-side-bar></activities-tree-side-bar>
-      <activity-panel></activity-panel>
+      <ActivityDetailsArea />
     </div>
   </section>
 </template>
 
 <script>
+import ActivityDetailsArea from '@/components/activity/ActivityDetailsArea.vue'
 import ActivitiesTreeSideBar from '@/components/activities/ActivitiesTreeSideBar.vue'
-import ActivityPanel from '@/components/activities/activity/ActivityPanel.vue'
 
 export default {
   components: {
-    ActivityPanel,
+    ActivityDetailsArea,
     ActivitiesTreeSideBar,
   },
   methods: {

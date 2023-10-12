@@ -1,20 +1,16 @@
 <template>
-  <div class="hy-icon-button" :class="themeClassName">
-    <span v-if="!!text">{{ text }}</span>
-    <w-icon v-if="!!icon">{{ icon }}</w-icon>
+  <div class="hy-menu-button" :class="'theme-' + theme">
+    <slot v-if="icon" name="icon">
+      <w-icon>{{ icon }}</w-icon>
+    </slot>
+    <slot name="default"></slot>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    disabled: {
-      default: false,
-    },
     icon: {
-      type: String,
-    },
-    text: {
       type: String,
     },
     theme: {
@@ -22,16 +18,11 @@ export default {
       default: 'green',
     },
   },
-  computed: {
-    themeClassName() {
-      return `theme-${this.disabled ? 'disabled' : this.theme}`
-    },
-  },
 }
 </script>
 
 <style scoped>
-.hy-icon-button {
+.hy-menu-button {
   display: flex;
   flex-direction: row;
   padding: 0.1rem 0.4rem;
@@ -42,57 +33,53 @@ export default {
   align-items: center;
   justify-content: center;
   border: 1px solid;
+  /*  border: 1px solid rgb(213, 128, 0);
+    color: rgb(213, 128, 0);
+    background-color: rgb(255, 238, 185);*/
+  /*  border: 1px solid rgb(213, 128, 0);
+    color: rgb(213, 128, 0);
+    background-color: rgb(255, 238, 185);*/
 }
 
-.hy-icon-button span {
-  padding: 0 1rem;
-}
-
-.hy-icon-button.theme-disabled {
-  background-color: var(--color-gray-0);
-  cursor: not-allowed;
-  color: var(--color-gray-2);
-}
-
-.hy-icon-button.theme-green {
+.hy-menu-button.theme-green {
   border-color: var(--theme-green-color-4);
   color: var(--theme-green-color-4);
   background-color: var(--theme-green-color-1);
 }
 
-.hy-icon-button.theme-green:hover {
+.hy-menu-button.theme-green:hover {
   background-color: var(--theme-green-color-2);
 }
 
-.hy-icon-button.theme-green:active {
+.hy-menu-button.theme-green:active {
   background-color: var(--theme-green-color-3);
 }
 
-.hy-icon-button.theme-orange {
+.hy-menu-button.theme-orange {
   border-color: var(--theme-orange-color-4);
   color: var(--theme-orange-color-4);
   background-color: var(--theme-orange-color-1);
 }
 
-.hy-icon-button.theme-orange:hover {
+.hy-menu-button.theme-orange:hover {
   background-color: var(--theme-orange-color-2);
 }
 
-.hy-icon-button.theme-orange:active {
+.hy-menu-button.theme-orange:active {
   background-color: var(--theme-orange-color-3);
 }
 
-.hy-icon-button.theme-red {
+.hy-menu-button.theme-red {
   border-color: var(--theme-red-color-4);
   color: var(--theme-red-color-4);
   background-color: var(--theme-red-color-1);
 }
 
-.hy-icon-button.theme-red:hover {
+.hy-menu-button.theme-red:hover {
   background-color: var(--theme-red-color-2);
 }
 
-.hy-icon-button.theme-red:active {
+.hy-menu-button.theme-red:active {
   background-color: var(--theme-red-color-3);
 }
 </style>

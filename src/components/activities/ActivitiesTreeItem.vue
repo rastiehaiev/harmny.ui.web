@@ -22,7 +22,14 @@
         <hy-tooltip :message-code="activity.errorCode" :is-error="!!activity.errorCode">
           <hy-list-item-content :error-code="activity.errorCode" :route-to="routeTo(activity.id)">
             <template #left-icon>
-              <w-icon class="activity_item__icon-activity" v-if="!activity.group">
+              <w-icon
+                spin
+                class="activity_item__icon-activity"
+                v-if="!!activity.current_repetition_id"
+              >
+                mdi mdi-progress-helper
+              </w-icon>
+              <w-icon class="activity_item__icon-activity" v-else-if="!activity.group">
                 mdi mdi-rocket-launch
               </w-icon>
               <w-icon

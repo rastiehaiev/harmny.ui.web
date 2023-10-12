@@ -1,6 +1,5 @@
 <template>
-  Activities: {{ getActivitiesCount() }}<br />
-  Activity Groups: {{ getActivityGroupsCount() }}
+  <div></div>
 </template>
 
 <script>

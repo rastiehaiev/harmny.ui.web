@@ -41,20 +41,31 @@ export default {
     })
   },
   async startRepetition(activityId, repetitionId, repetition) {
-    return await apiClient.post(`/${activityId}/repetitions/${repetitionId}/start`, repetition).then((response) => {
-      return response.data
-    })
+    return await apiClient
+      .post(`/${activityId}/repetitions/${repetitionId}/start`, repetition)
+      .then((response) => {
+        return response.data
+      })
   },
   async pauseRepetition(activityId, repetitionId) {
-    return await apiClient.post(`/${activityId}/repetitions/${repetitionId}/pause`).then((response) => {
+    return await apiClient
+      .post(`/${activityId}/repetitions/${repetitionId}/pause`)
+      .then((response) => {
+        return response.data
+      })
+  },
+  async deleteRepetition(activityId, repetitionId) {
+    return await apiClient.delete(`/${activityId}/repetitions/${repetitionId}`).then((response) => {
       return response.data
     })
   },
   async upsertRepetition(activityId, repetitionId, repetition) {
     if (repetitionId) {
-      return await apiClient.put(`/${activityId}/repetitions/${repetitionId}`, repetition).then((response) => {
-        return response.data
-      })
+      return await apiClient
+        .put(`/${activityId}/repetitions/${repetitionId}`, repetition)
+        .then((response) => {
+          return response.data
+        })
     }
     return await apiClient.post(`/${activityId}/repetitions`, repetition).then((response) => {
       return response.data
