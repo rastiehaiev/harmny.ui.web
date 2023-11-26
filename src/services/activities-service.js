@@ -35,6 +35,11 @@ export default {
       return response.data
     })
   },
+  async listRepetitions(activityId) {
+    return await apiClient.get(`/${activityId}/repetitions`, { params: { page_size: 5 } }).then((response) => {
+      return response.data
+    })
+  },
   async getRepetition(activityId, repetitionId) {
     return await apiClient.get(`/${activityId}/repetitions/${repetitionId}`).then((response) => {
       return response.data
@@ -68,6 +73,16 @@ export default {
         })
     }
     return await apiClient.post(`/${activityId}/repetitions`, repetition).then((response) => {
+      return response.data
+    })
+  },
+  async getStatistics(activityId) {
+    return await apiClient.get(`/${activityId}/statistics`).then((response) => {
+      return response.data
+    })
+  },
+  async getLineChart(activityId) {
+    return await apiClient.get(`/${activityId}/metrics/line-chart`).then((response) => {
       return response.data
     })
   },

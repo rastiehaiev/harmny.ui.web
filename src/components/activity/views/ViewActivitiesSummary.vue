@@ -1,6 +1,8 @@
 <template>
   <NotImplementedView>
-    The <HyMagentaText>Activities Summary</HyMagentaText> page serves as the central hub for managing and organizing your tasks, to-dos, and activities. This page empowers you to break down your day-to-day responsibilities into actionable items and ensures nothing slips through the cracks. Whether it's work-related tasks, personal errands, or hobbies, the Activities page helps you keep track of everything in one place.
+    The <HyMagentaText>Activities Summary</HyMagentaText> page, while currently under development, will offer a range of valuable insights, statistics,
+    and charts to help you gain a better understanding of your task management and productivity.
+    It's designed to provide you with the tools you need to optimize your workflow and work more efficiently toward your goals.
   </NotImplementedView>
 </template>
 

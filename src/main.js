@@ -3,6 +3,7 @@ import App from './App.vue'
 
 import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
+import VueApexCharts from 'vue3-apexcharts'
 
 import WaveUI from 'wave-ui'
 import router from '@/router/router'
@@ -30,6 +31,7 @@ app.use(store)
 app.use(WaveUI)
 app.use(PrimeVue)
 app.use(ToastService)
+app.use(VueApexCharts)
 
 app.component('icon-logo', IconLogo)
 

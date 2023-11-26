@@ -137,6 +137,9 @@ ul {
   --theme-red-color-3: rgb(253, 193, 167);
   --theme-red-color-4: rgb(213, 32, 0);
   --font-family: Inter, Helvetica, monospace;
+  --header-default-height: 2.8rem;
+  --breadcrumbs-height: 3.6rem;
+  --sidebar-width: 4rem;
 }
 
 #app {
@@ -187,4 +190,23 @@ a.link__default:active {
 
 input {
   font-weight: 300;
+}
+
+.hy-scrollable {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 200, 231, 0.3) rgba(255, 255, 255, 0);
+}
+
+.hy-scrollable::-webkit-scrollbar {
+  width: 0.1em;
+  display: block;
+}
+
+.hy-scrollable::-webkit-scrollbar-thumb {
+  background-color: rgba(15, 200, 231, 0.3);
+  border-radius: 0.2rem;
 }

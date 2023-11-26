@@ -250,6 +250,10 @@ export default {
   width: 2rem;
 }
 
+.signin-socials-section__description {
+  text-align: center;
+}
+
 .signin-socials-section__description h4 {
   font-weight: 400;
 }
@@ -293,6 +297,7 @@ export default {
 @media only screen and (min-width: 90rem) {
   .signin-container {
     width: 50%;
+    max-width: 60rem;
     flex-direction: row;
   }
 

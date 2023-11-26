@@ -15,7 +15,7 @@ export default {
 <style scoped>
 .hy-tabs-header {
   width: 100%;
-  height: 2.8rem;
+  height: var(--header-default-height);
   border-bottom: 1px solid var(--color-gray-0);
   flex-shrink: 0;
 }

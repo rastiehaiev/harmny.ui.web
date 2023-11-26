@@ -9,7 +9,7 @@
       <div class="hy-list-item-content__left-icon-area">
         <slot name="left-icon"></slot>
       </div>
-      <div class="hy-list-item-content__base-content-area" @dblclick="onClick()">
+      <div class="hy-list-item-content__base-content-area" @click="onClick()">
         <slot name="base-content"></slot>
       </div>
       <div class="hy-list-item-content__action-items-area">

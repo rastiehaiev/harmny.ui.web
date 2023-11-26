@@ -57,7 +57,7 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 4rem;
+  height: var(--sidebar-width);
   border-top: 1px solid #eaeaea;
   justify-content: center;
   z-index: 70;
@@ -83,7 +83,7 @@
 
 @media only screen and (min-width: 50rem) {
   #app-sidebar {
-    width: 4rem;
+    width: var(--sidebar-width);
     height: 100%;
     border-right: 1px solid #eaeaea;
     border-top: none;

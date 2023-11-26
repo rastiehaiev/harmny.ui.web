@@ -58,8 +58,8 @@ html {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding-top: 3.6rem;
-  padding-bottom: 4rem;
+  padding-top: var(--breadcrumbs-height);
+  padding-bottom: var(--sidebar-width);
   position: fixed;
   width: 100%;
 }
@@ -67,7 +67,7 @@ html {
 @media only screen and (min-width: 50rem) {
   .app-content {
     height: 100%;
-    padding-left: 4rem;
+    padding-left: var(--sidebar-width);
     padding-bottom: 0;
   }
 }

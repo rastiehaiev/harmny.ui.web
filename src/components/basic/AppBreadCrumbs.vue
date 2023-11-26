@@ -114,7 +114,7 @@ export default {
   background-color: white;
   display: block;
   position: fixed;
-  height: 3.6rem;
+  height: var(--breadcrumbs-height);
   width: 100%;
   border-bottom: 1px solid #eaeaea;
   z-index: 60;
@@ -145,7 +145,7 @@ span.app-bread-crumbs__item {
 
 @media only screen and (min-width: 50rem) {
   .app-bread-crumbs {
-    margin-left: 4rem;
+    margin-left: var(--sidebar-width);
   }
 
   .app-bread-crumbs__content {

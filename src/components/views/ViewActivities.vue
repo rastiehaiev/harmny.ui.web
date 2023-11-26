@@ -3,7 +3,7 @@
   <app-bread-crumbs></app-bread-crumbs>
   <section class="app-content">
     <div class="app-content__main">
-      <activities-tree-side-bar></activities-tree-side-bar>
+      <ActivitiesTreeSideBar></ActivitiesTreeSideBar>
       <ActivityDetailsArea />
     </div>
   </section>

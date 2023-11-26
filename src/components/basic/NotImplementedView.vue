@@ -3,7 +3,8 @@
     <section class="not-implemented-view__sub-section">
       <HyScrollableSection>
         <div>
-          <w-icon>mdi mdi-account-hard-hat-outline</w-icon><slot name="header">This page is not yet implemented.</slot>
+          <w-icon>mdi mdi-account-hard-hat-outline</w-icon
+          ><slot name="header">This page is not yet implemented.</slot>
         </div>
         <div>
           <slot name="default"></slot>

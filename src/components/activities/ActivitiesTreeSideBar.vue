@@ -323,7 +323,7 @@ export default {
 
 <style scoped>
 .activities-tree__collapsed-view {
-  width: 2.8rem;
+  width: var(--header-default-height);
   height: 100%;
   background-color: rgba(186, 224, 223, 0.09);
   border-right: 1px solid var(--color-gray-0);
@@ -339,7 +339,7 @@ export default {
 .activities-tree__collapsed-view--wrapper {
   display: flex;
   width: 20rem;
-  height: 2.8rem;
+  height: var(--header-default-height);
   align-items: center;
   justify-content: right;
   gap: 1rem;
@@ -372,7 +372,7 @@ export default {
   flex-direction: column;
   border-right: 1px solid #eaeaea;
   background-color: var(--color-side-list);
-  height: calc(100% - 3.6rem - 4rem);
+  height: calc(100% - var(--breadcrumbs-height) - var(--sidebar-width));
   z-index: 10;
 }
 
@@ -381,8 +381,14 @@ export default {
     position: static;
     display: flex;
     height: 100%;
-    width: 20rem;
+    width: 16rem;
     padding-bottom: 1.6rem;
+  }
+}
+
+@media only screen and (min-width: 90rem) {
+  .activities-tree-section {
+    width: 20rem;
   }
 }
 
@@ -464,7 +470,7 @@ export default {
   display: flex;
   align-items: center;
   width: 2rem;
-  height: 4rem;
+  height: var(--sidebar-width);
   color: white;
   font-size: 1.25rem;
   font-weight: 350;

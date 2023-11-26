@@ -10,6 +10,7 @@
     :max-date="maxDate()"
     :disabled="disabled"
     :action-row="{ showNow: !timeOnly }"
+    :config="{allowStopPropagation: true}"
     utc
     prevent-min-max-navigation
     input-class-name="date-picker-input"

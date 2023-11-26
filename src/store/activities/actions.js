@@ -146,6 +146,14 @@ export default {
       }
     }
   },
+  async listActivityRepetitions(context, { activityId }) {
+    if (activityId) {
+      return await activitiesService.listRepetitions(activityId)
+        .then((activityRepetition) => {
+          return activityRepetition.items
+        })
+    }
+  },
   async getActivityRepetition(context, { activityId, repetitionId }) {
     if (activityId && repetitionId) {
       return await activitiesService
@@ -184,5 +192,11 @@ export default {
       repetitionId,
       updateRepetitionRequest,
     )
+  },
+  async getStatistics(context, { activityId }) {
+    return await activitiesService.getStatistics(activityId)
+  },
+  async getLineChart(context, { activityId }) {
+    return await activitiesService.getLineChart(activityId)
   },
 }
