@@ -2,7 +2,7 @@ job("Publish frontend distribution") {
     startOn {
         gitPush {
             anyBranchMatching {
-                +"refs/heads/HARMNY-T-64"
+                +"refs/heads/main"
             }
         }
     }
